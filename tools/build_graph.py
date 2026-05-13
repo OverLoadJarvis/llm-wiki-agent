@@ -31,6 +31,12 @@ from datetime import date
 import os
 
 try:
+    from dotenv import load_dotenv
+    load_dotenv(override=True)
+except ImportError:
+    pass
+
+try:
     import networkx as nx
     from networkx.algorithms import community as nx_community
     HAS_NETWORKX = True
@@ -46,7 +52,7 @@ GRAPH_HTML = GRAPH_DIR / "graph.html"
 CACHE_FILE = GRAPH_DIR / ".cache.json"
 INFERRED_EDGES_FILE = GRAPH_DIR / ".inferred_edges.jsonl"
 LOG_FILE = WIKI_DIR / "log.md"
-SCHEMA_FILE = REPO_ROOT / "CLAUDE.md"
+SCHEMA_FILE = REPO_ROOT / "AGENTS.md"
 
 # Node type → color mapping
 TYPE_COLORS = {
@@ -85,6 +91,14 @@ def call_llm(prompt: str, model_env: str, default_model: str, max_tokens: int = 
 
     if max_tokens:
         kwargs["max_tokens"] = max_tokens
+    
+    api_base = os.getenv("OPENAI_API_BASE")
+    api_key = os.getenv("OPENAI_API_KEY")
+    
+    if api_base:
+        kwargs["api_base"] = api_base
+    if api_key:
+        kwargs["api_key"] = api_key
 
     response = completion(**kwargs)
     return response.choices[0].message.content
@@ -308,17 +322,41 @@ Rules:
         page_edges = []
         valid_rels = []
         try:
-            raw = call_llm(prompt, "LLM_MODEL_FAST", "claude-3-5-haiku-latest", max_tokens=1024)
+            raw = call_llm(prompt, "LLM_MODEL_FAST", "claude-3-5-haiku-latest", max_tokens=9182)
             raw = raw.strip()
 
+            if not raw:
+                print("-> [WARN] Empty response received")
+                continue
+
+            raw = raw.replace('\r\n', '\n').replace('\r', '\n')
+            
             match = re.search(r"(\{[\s\S]*\}|\[[\s\S]*\])", raw)
             if match:
                 raw = match.group(0)
             else:
                 raw = re.sub(r"^```(?:json)?\s*", "", raw)
                 raw = re.sub(r"\s*```$", "", raw)
+            
+            raw = raw.strip()
+            if not raw:
+                print("-> [WARN] No JSON found in response")
+                continue
 
-            inferred = json.loads(raw)
+            try:
+                inferred = json.loads(raw)
+            except json.JSONDecodeError as e:
+                print(f"-> [WARN] JSON decode failed: {str(e)[:60]}")
+                print(f"   Attempting to fix invalid JSON...")
+                raw = re.sub(r',\s*([}\]])', r'\1', raw)
+                raw = re.sub(r'([{,])\s*([^{}\[\],:\s]+)\s*:', r'\1 "\2":', raw)
+                try:
+                    inferred = json.loads(raw)
+                    print("   -> Fixed JSON successfully")
+                except json.JSONDecodeError as e2:
+                    print(f"   -> Fix failed: {str(e2)[:60]}")
+                    continue
+
             if isinstance(inferred, dict):
                 edges_list = inferred.get("edges", [])
             elif isinstance(inferred, list):

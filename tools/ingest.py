@@ -35,6 +35,12 @@ from pathlib import Path
 from collections import defaultdict
 from datetime import date
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv(override=True)
+except ImportError:
+    pass
+
 REPO_ROOT = Path(__file__).parent.parent
 WIKI_DIR = REPO_ROOT / "wiki"
 LOG_FILE = WIKI_DIR / "log.md"
@@ -78,6 +84,14 @@ def call_llm(prompt: str, max_tokens: int = 8192) -> str:
     
     if max_tokens:
         kwargs["max_tokens"] = max_tokens
+    
+    api_base = os.getenv("OPENAI_API_BASE")
+    api_key = os.getenv("OPENAI_API_KEY")
+    
+    if api_base:
+        kwargs["api_base"] = api_base
+    if api_key:
+        kwargs["api_key"] = api_key
 
     response = completion(**kwargs)
     return response.choices[0].message.content

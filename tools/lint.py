@@ -27,6 +27,12 @@ from datetime import date
 
 import os
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv(override=True)
+except ImportError:
+    pass
+
 REPO_ROOT = Path(__file__).parent.parent
 WIKI_DIR = REPO_ROOT / "wiki"
 GRAPH_DIR = REPO_ROOT / "graph"
@@ -47,11 +53,24 @@ def call_llm(prompt: str, model_env: str, default_model: str, max_tokens: int = 
         sys.exit(1)
         
     model = os.getenv(model_env, default_model)
-    response = completion(
-        model=model,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=max_tokens
-    )
+    
+    kwargs = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}]
+    }
+    
+    if max_tokens:
+        kwargs["max_tokens"] = max_tokens
+    
+    api_base = os.getenv("OPENAI_API_BASE")
+    api_key = os.getenv("OPENAI_API_KEY")
+    
+    if api_base:
+        kwargs["api_base"] = api_base
+    if api_key:
+        kwargs["api_key"] = api_key
+
+    response = completion(**kwargs)
     return response.choices[0].message.content
 
 
@@ -139,7 +158,7 @@ def load_graph_data() -> dict | None:
         return None
     try:
         return json.loads(GRAPH_JSON.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, IOError):
+    except (json.JSONDecodeError, IOError, UnicodeDecodeError):
         print("  [warn] graph.json is corrupted — skipping graph-aware checks")
         return None
 
