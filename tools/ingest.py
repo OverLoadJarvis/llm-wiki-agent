@@ -41,7 +41,9 @@ try:
 except ImportError:
     pass
 
+# 仓库根目录
 REPO_ROOT = Path(__file__).parent.parent
+
 WIKI_DIR = REPO_ROOT / "wiki"
 LOG_FILE = WIKI_DIR / "log.md"
 INDEX_FILE = WIKI_DIR / "index.md"
@@ -56,19 +58,28 @@ CONVERTIBLE_EXTENSIONS = {
     ".yaml", ".yml", ".tsv",
     ".wav", ".mp3",  # audio transcription via markitdown
 }
-ALL_SUPPORTED_EXTENSIONS = {".md"} | CONVERTIBLE_EXTENSIONS
-SCHEMA_FILE = REPO_ROOT / "CLAUDE.md"
+ALL_SUPPORTED_EXTENSIONS = {".md"} | CONVERTIBLE_EXTENSIONS   # | 集合运算符，并集
+SCHEMA_FILE = REPO_ROOT / "AGENTS.md"
 
 
 def sha256(text: str) -> str:
+    """
+    计算字符串的SHA-256哈希值，返回前16位
+    """
     return hashlib.sha256(text.encode()).hexdigest()[:16]
 
 
 def read_file(path: Path) -> str:
+    """
+    读取文件内容，返回字符串
+    """
     return path.read_text(encoding="utf-8") if path.exists() else ""
 
 
 def call_llm(prompt: str, max_tokens: int = 8192) -> str:
+    """
+    调用LLM模型，返回模型回复
+    """
     try:
         from litellm import completion
     except ImportError:
@@ -79,7 +90,7 @@ def call_llm(prompt: str, max_tokens: int = 8192) -> str:
     
     kwargs = {
         "model": model,
-        "messages": [{"role": "user", "content": prompt}]
+        "messages": [{"role": "system", "content": prompt}]
     }
     
     if max_tokens:
@@ -98,12 +109,18 @@ def call_llm(prompt: str, max_tokens: int = 8192) -> str:
 
 
 def write_file(path: Path, content: str):
+    """
+    写入文件内容
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
     print(f"  wrote: {path.relative_to(REPO_ROOT)}")
 
 
 def build_wiki_context() -> str:
+    """
+    构建Wiki上下文，返回字符串
+    """
     parts = []
     if INDEX_FILE.exists():
         parts.append(f"## wiki/index.md\n{read_file(INDEX_FILE)}")
@@ -111,17 +128,22 @@ def build_wiki_context() -> str:
         parts.append(f"## wiki/overview.md\n{read_file(OVERVIEW_FILE)}")
     # Include a few recent source pages for contradiction checking
     sources_dir = WIKI_DIR / "sources"
+    # 选择最新的5个摘要文件
     if sources_dir.exists():
         recent = sorted(sources_dir.glob("*.md"), key=lambda p: p.stat().st_mtime, reverse=True)[:5]
         for p in recent:
-            parts.append(f"## {p.relative_to(REPO_ROOT)}\n{p.read_text()}")
+            parts.append(f"## {p.relative_to(REPO_ROOT)}\n{read_file(p)}")
     return "\n\n---\n\n".join(parts)
 
 
 def parse_json_from_response(text: str) -> dict:
+    """
+    从模型回复中解析JSON对象，返回字典
+    """
     # Strip markdown code fences if present
     text = re.sub(r"^```(?:json)?\s*", "", text.strip())
     text = re.sub(r"\s*```$", "", text.strip())
+
     # Find the outermost JSON object
     match = re.search(r"\{[\s\S]*\}", text)
     if not match:
@@ -130,6 +152,9 @@ def parse_json_from_response(text: str) -> dict:
 
 
 def update_index(new_entry: str, section: str = "Sources"):
+    """
+    更新Wiki索引，添加新条目
+    """
     content = read_file(INDEX_FILE)
     if not content:
         content = "# Wiki Index\n\n## Overview\n- [Overview](overview.md) — living synthesis\n\n## Sources\n\n## Entities\n\n## Concepts\n\n## Syntheses\n"
@@ -142,6 +167,9 @@ def update_index(new_entry: str, section: str = "Sources"):
 
 
 def append_log(entry: str):
+    """
+    追加日志条目到日志文件
+    """
     existing = read_file(LOG_FILE)
     write_file(LOG_FILE, entry.strip() + "\n\n" + existing)
 
@@ -238,6 +266,15 @@ def convert_to_md(source: Path) -> Path:
 
 
 def ingest(source_path: str, auto_convert: bool = True):
+    # 将文件转换成md文档
+    # 将当前文档和wiki上下文合并，让大模型分析当前文档的内容，输出要更新的wiki页面内容
+    # 大模型的输出包含以下字段：
+    # 1. overview_update：  更新后的overview.md文件内容
+    # 2. entity_pages：     更新后的实体页面内容
+    # 3. concept_pages：    更新后的概念页面内容
+    # 4. index_entry：      更新后的index.md文件内容
+    # 5. log_entry：        日志条目
+    # 6. contradictions：   如果有矛盾，打印出来
     source = Path(source_path)
     if not source.exists():
         print(f"Error: file not found: {source_path}")
@@ -254,16 +291,23 @@ def ingest(source_path: str, auto_convert: bool = True):
             print(f"       Supported: {', '.join(sorted(ALL_SUPPORTED_EXTENSIONS))}")
             return
         print(f"  Converting {source.name} to markdown...")
+        # 将文件转换成md格式
         converted_path = convert_to_md(source)
+        # source是指向新的转换后的md文件
         source = converted_path
 
     source_content = source.read_text(encoding="utf-8")
     source_hash = sha256(source_content)
     today = date.today().isoformat()
 
+    # 打印日志，摄取文件
     print(f"\nIngesting: {source.name}  (hash: {source_hash})")
 
+    # 构建wiki上下文，也就是wiki的index、overview和最近使用到的实体和概念页面(代码中硬编码了前5个最新的wiki摘要)
     wiki_context = build_wiki_context()
+    
+    # schema就是AGENTS.md文件，把这份文件给处理wiki的大模型读一下
+    # todo 这里可以优化一下，不需要AGENTS.md中的全部内容
     schema = read_file(SCHEMA_FILE)
 
     prompt = f"""You are maintaining an LLM Wiki. Process this source document and integrate its knowledge into the wiki.
@@ -304,6 +348,7 @@ Return ONLY a valid JSON object with these fields (no markdown fences, no prose 
     try:
         data = parse_json_from_response(raw)
     except (ValueError, json.JSONDecodeError) as e:
+        # 解析失败，没有返回JSON格式的内容
         print(f"Error parsing API response: {e}")
         print("Raw response saved to /tmp/ingest_debug.txt")
         Path("/tmp/ingest_debug.txt").write_text(raw)
@@ -317,11 +362,11 @@ Return ONLY a valid JSON object with these fields (no markdown fences, no prose 
     for page in data.get("entity_pages", []):
         write_file(WIKI_DIR / page["path"], page["content"])
 
-    # Write concept pages
+    # Write concept pages 
     for page in data.get("concept_pages", []):
         write_file(WIKI_DIR / page["path"], page["content"])
 
-    # Update overview
+    # Update overview 直接就是大模型来更新overview.md文件
     if data.get("overview_update"):
         write_file(OVERVIEW_FILE, data["overview_update"])
 
@@ -331,7 +376,7 @@ Return ONLY a valid JSON object with these fields (no markdown fences, no prose 
     # Append log
     append_log(data["log_entry"])
 
-    # Report contradictions
+    # Report contradictions 如果有矛盾，打印出来，也是大模型直接判断是否有冲突
     contradictions = data.get("contradictions", [])
     if contradictions:
         print("\n  ⚠️  Contradictions detected:")

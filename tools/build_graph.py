@@ -86,7 +86,7 @@ def call_llm(prompt: str, model_env: str, default_model: str, max_tokens: int = 
 
     kwargs = {
         "model": model,
-        "messages": [{"role": "user", "content": prompt}]
+        "messages": [{"role": "system", "content": prompt}]
     }
 
     if max_tokens:
@@ -322,7 +322,7 @@ Rules:
         page_edges = []
         valid_rels = []
         try:
-            raw = call_llm(prompt, "LLM_MODEL_FAST", "claude-3-5-haiku-latest", max_tokens=9182)
+            raw = call_llm(prompt, "LLM_MODEL_FAST", "claude-3-5-haiku-latest", max_tokens=8192)
             raw = raw.strip()
 
             if not raw:

@@ -1,7 +1,110 @@
 {
   "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\overview.md": {
-    "hash": "560553d8ffa8fd9d51277a56e7bd05cd484ee579e7d622e5ab916259de66d6f3",
-    "edges": []
+    "hash": "8b416d6084db3fa282bec8156384f109434b28e38f0be2b78d0062206125e1ca",
+    "edges": [
+      {
+        "to": "sources/\u4e2d\u56fd\u5171\u4ea7\u515a\u7b2c\u4e8c\u5341\u5c4a\u4e2d\u592e\u59d4\u5458\u4f1a\u7b2c\u56db\u6b21\u5168\u4f53\u4f1a\u8bae\u516c\u62a5",
+        "relationship": "Synthesizes content from this source",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4e60\u8fd1\u5e73\u5b66\u4e60\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "Synthesizes content from this source",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u89e3\u8bfb\u515a\u7684\u4e8c\u5341\u5c4a\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "Synthesizes content from this source",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4ee5\u6b63\u786e\u9009\u4eba\u7528\u4eba\u5bfc\u5411\u6fc0\u52b1\u5e72\u90e8\u62c5\u5f53\u4f5c\u4e3a",
+        "relationship": "Synthesizes content from this source",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u5341\u4e94\u4e94\u89c4\u5212\u5efa\u8bae\u89e3\u8bfb",
+        "relationship": "Synthesizes content from this source",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u594b\u8fdb\u5341\u4e94\u4e94\u9ad8\u8d28\u91cf\u53d1\u5c55\u65b0\u56fe\u666f",
+        "relationship": "Synthesizes content from this source",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/gaobiaozhun-gaozhiliang-fazhan-dangyuan-gongzuo",
+        "relationship": "Synthesizes content from this source",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u9ad8\u8d28\u91cf\u53d1\u5c55",
+        "relationship": "Discusses the concept of high-quality development",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u65b0\u8d28\u751f\u4ea7\u529b",
+        "relationship": "Discusses new quality productive forces",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5b9e\u4f53\u7ecf\u6d4e",
+        "relationship": "Discusses the real economy as part of modernization",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u5168\u9762\u4ece\u4e25\u6cbb\u515a",
+        "relationship": "Covers comprehensive strict party governance as a key theme",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u653f\u6cbb\u6807\u51c6",
+        "relationship": "Relates to the selection and evaluation of cadres with political standards",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u7ec6\u5219",
+        "relationship": "References the revision of the party membership work regulations",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a",
+        "relationship": "Discusses the 20th Central Committee and party building",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316",
+        "relationship": "Centers on the path of Chinese-style modernization",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5e72\u90e8\u961f\u4f0d\u5efa\u8bbe",
+        "relationship": "Implies cadre team building through personnel selection",
+        "confidence": 0.7,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u515a\u7684\u81ea\u6211\u9769\u547d",
+        "relationship": "Underlies the comprehensive strict party governance measures",
+        "confidence": 0.7,
+        "type": "INFERRED"
+      }
+    ]
   },
   "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\sources\\\u4ee5\u6b63\u786e\u9009\u4eba\u7528\u4eba\u5bfc\u5411\u6fc0\u52b1\u5e72\u90e8\u62c5\u5f53\u4f5c\u4e3a.md": {
     "hash": "ebda55400beafc838fef1027affa9546b98bcfc03a2bd8167e6fc9465f7ff192",
@@ -33,6 +136,874 @@
       {
         "to": "\u89e3\u8bfb\u515a\u7684\u4e8c\u5341\u5c4a\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
         "relationship": "\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e\u6307\u5bfc\u9009\u4eba\u7528\u4eba\u5b9e\u8df5",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\concepts\\\u5168\u9762\u4ece\u4e25\u6cbb\u515a.md": {
+    "hash": "18fe949a2e164f8d3297b74f270f6ec501da1d77f54a1c43808e29dd8a9975f8",
+    "edges": [
+      {
+        "to": "entities/\u4e2d\u592e\u7ec4\u7ec7\u90e8",
+        "relationship": "\u8d1f\u8d23\u7ec4\u7ec7\u5efa\u8bbe\u548c\u5e72\u90e8\u9009\u4efb\u7684\u4e3b\u8981\u673a\u6784\uff0c\u4e0e\u5168\u9762\u4ece\u4e25\u6cbb\u515a\u7684\u7ec4\u7ec7\u5efa\u8bbe\u5bc6\u5207\u76f8\u5173",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73",
+        "relationship": "\u5168\u9762\u4ece\u4e25\u6cbb\u515a\u7684\u6838\u5fc3\u5021\u5bfc\u8005\u548c\u63a8\u8fdb\u8005",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/gaobiaozhun-gaozhiliang-fazhan-dangyuan-gongzuo",
+        "relationship": "\u9875\u9762\u5f15\u7528\u7684\u6765\u6e90\uff0c\u8bf4\u660e\u5168\u9762\u4ece\u4e25\u6cbb\u515a\u5728\u515a\u5458\u53d1\u5c55\u4e2d\u7684\u9ad8\u6807\u51c6\u8981\u6c42",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4e60\u8fd1\u5e73\u5b66\u4e60\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "\u9875\u9762\u5f15\u7528\u7684\u6765\u6e90\uff0c\u5173\u4e8e\u4e60\u8fd1\u5e73\u5b66\u4e60\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e\u7684\u8bba\u8ff0",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4ee5\u6b63\u786e\u9009\u4eba\u7528\u4eba\u5bfc\u5411\u6fc0\u52b1\u5e72\u90e8\u62c5\u5f53\u4f5c\u4e3a",
+        "relationship": "\u9875\u9762\u5f15\u7528\u7684\u6765\u6e90\uff0c\u5173\u4e8e\u9009\u4eba\u7528\u4eba\u5bfc\u5411\u4e0e\u5168\u9762\u4ece\u4e25\u6cbb\u515a",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4e2d\u56fd\u5171\u4ea7\u515a\u7b2c\u4e8c\u5341\u5c4a\u4e2d\u592e\u59d4\u5458\u4f1a\u7b2c\u56db\u6b21\u5168\u4f53\u4f1a\u8bae\u516c\u62a5",
+        "relationship": "\u56db\u4e2d\u5168\u4f1a\u5b98\u65b9\u516c\u62a5\uff0c\u4e0e\u9875\u9762\u5f15\u7528\u7684\u5b66\u4e60\u6750\u6599\u76f4\u63a5\u5173\u8054",
+        "confidence": 0.7,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u89e3\u8bfb\u515a\u7684\u4e8c\u5341\u5c4a\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "\u5bf9\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e\u7684\u89e3\u8bfb\uff0c\u4e0e\u9875\u9762\u5f15\u7528\u7684\u5b66\u4e60\u6750\u6599\u95f4\u63a5\u76f8\u5173",
+        "confidence": 0.65,
+        "type": "AMBIGUOUS"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\concepts\\\u53d1\u5c55\u515a\u5458\u5de5\u4f5c.md": {
+    "hash": "382db8875306d17066ed22a19c095ad6133f496d1ab369b09633b2db7b9b8d70",
+    "edges": [
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u7ec6\u5219",
+        "relationship": "is governed by the detailed regulations for membership development",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u515a\u7684\u81ea\u6211\u9769\u547d",
+        "relationship": "contributes to the party's self-revolution and organizational health through quality membership",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5e72\u90e8\u961f\u4f0d\u5efa\u8bbe",
+        "relationship": "is a foundational component of cadre building by optimizing member structure",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u9ad8\u8d28\u91cf\u53d1\u5c55",
+        "relationship": "aims for high-quality development of party members as indicated by the source title",
+        "confidence": 0.75,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73",
+        "relationship": "related through the guiding ideology of Xi Jinping Thought on Socialism with Chinese Characteristics for a New Era",
+        "confidence": 0.7,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316",
+        "relationship": "supports the party's leadership in advancing Chinese-style modernization",
+        "confidence": 0.6,
+        "type": "AMBIGUOUS"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\concepts\\\u653f\u6cbb\u6807\u51c6.md": {
+    "hash": "052467896bb1c1ff8e7d223b0d3b24c5fdcd62f4ae3f79cf0beaee688b9fad55",
+    "edges": [
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3",
+        "relationship": "Political standards are core components of Xi Jinping Thought",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u592e\u7ec4\u7ec7\u90e8",
+        "relationship": "Political review involves organization departments, led by Central Organization Department",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u515a\u7684\u81ea\u6211\u9769\u547d",
+        "relationship": "Political standards ensure party purity, supporting self-reform",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73",
+        "relationship": "Political standards emphasize loyalty to General Secretary Xi",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a",
+        "relationship": "Political standards are defined by the Chinese Communist Party for party building",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316",
+        "relationship": "Political standards for party members contribute to modernization leadership",
+        "confidence": 0.68,
+        "type": "AMBIGUOUS"
+      },
+      {
+        "to": "entities/\u9ad8\u8d28\u91cf\u53d1\u5c55",
+        "relationship": "High standards in party member development relate to high-quality development",
+        "confidence": 0.6,
+        "type": "AMBIGUOUS"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\entities\\\u4e2d\u56fd\u5171\u4ea7\u515a.md": {
+    "hash": "42036025878a6571f69cb1557a6f98484a04d53fad6f6e1fda59d0a3b1489f3c",
+    "edges": [
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3",
+        "relationship": "is the guiding ideology of",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5e72\u90e8\u961f\u4f0d\u5efa\u8bbe",
+        "relationship": "conducts cadre team building",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u53d1\u5c55\u515a\u5458\u5de5\u4f5c",
+        "relationship": "oversees the work of developing party members",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u653f\u6cbb\u6807\u51c6",
+        "relationship": "applies political standards in party member recruitment",
+        "confidence": 0.75,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\entities\\\u4e2d\u56fd\u5171\u4ea7\u515a\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u7ec6\u5219.md": {
+    "hash": "dfa5f016fd565808159ce9ab0efc3a1f6dc2fa6a509923580e773fa5aefdd3f9",
+    "edges": [
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3",
+        "relationship": "\u6307\u5bfc\u539f\u5219",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73",
+        "relationship": "\u6838\u5fc3\u9886\u5bfc",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u515a\u7684\u81ea\u6211\u9769\u547d",
+        "relationship": "\u5177\u4f53\u4f53\u73b0",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5e72\u90e8\u961f\u4f0d\u5efa\u8bbe",
+        "relationship": "\u76f8\u5173\u5236\u5ea6",
+        "confidence": 0.75,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u592e\u7ec4\u7ec7\u90e8",
+        "relationship": "\u4fee\u8ba2\u9881\u5e03",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/gaobiaozhun-gaozhiliang-fazhan-dangyuan-gongzuo",
+        "relationship": "\u88ab\u53c2\u8003",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4ee5\u6b63\u786e\u9009\u4eba\u7528\u4eba\u5bfc\u5411\u6fc0\u52b1\u5e72\u90e8\u62c5\u5f53\u4f5c\u4e3a",
+        "relationship": "\u5236\u5ea6\u9075\u5faa",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\entities\\\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316.md": {
+    "hash": "883788dfff3c6aedc6e5f7abd81a66b7080f8c909c620134cbcde369ff85031b",
+    "edges": [
+      {
+        "to": "concepts/\u5168\u9762\u4ece\u4e25\u6cbb\u515a",
+        "relationship": "\u6839\u672c\u653f\u6cbb\u4fdd\u969c",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5e72\u90e8\u961f\u4f0d\u5efa\u8bbe",
+        "relationship": "\u7ec4\u7ec7\u4fdd\u969c",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3",
+        "relationship": "\u7406\u8bba\u6307\u5bfc",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a",
+        "relationship": "\u6839\u672c\u9886\u5bfc\u529b\u91cf",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\entities\\\u4e2d\u592e\u7ec4\u7ec7\u90e8.md": {
+    "hash": "0151c2eab2a3f66c5bcd29fc970041af72c9807c9c1a833c4bef25587ef22383",
+    "edges": [
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u7ec6\u5219",
+        "relationship": "\u8d1f\u8d23\u4fee\u8ba2\u5e76\u7b54\u8bb0\u8005\u95ee",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u653f\u6cbb\u6807\u51c6",
+        "relationship": "\u5f3a\u8c03\u5728\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u4e2d\u628a\u653f\u6cbb\u6807\u51c6\u653e\u5728\u9996\u4f4d",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/gaobiaozhun-gaozhiliang-fazhan-dangyuan-gongzuo",
+        "relationship": "\u662f\u4e2d\u592e\u7ec4\u7ec7\u90e8\u5173\u4e8e\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u7b54\u8bb0\u8005\u95ee\u7684\u5b98\u65b9\u6765\u6e90",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\entities\\\u4e60\u8fd1\u5e73.md": {
+    "hash": "79a3dcd63d46510f2b5032a9da818e34a18c6b16b97647e4647768b71dd13506",
+    "edges": [
+      {
+        "to": "concepts/\u5168\u9762\u4ece\u4e25\u6cbb\u515a",
+        "relationship": "\u5f3a\u8c03\u6301\u4e4b\u4ee5\u6052\u63a8\u8fdb\u5168\u9762\u4ece\u4e25\u6cbb\u515a",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u53d1\u5c55\u515a\u5458\u5de5\u4f5c",
+        "relationship": "\u5bf9\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u4f5c\u51fa\u91cd\u8981\u8bba\u8ff0\u548c\u6307\u793a\u6279\u793a",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u7ec6\u5219",
+        "relationship": "\u4e3a2026\u5e74\u4fee\u8ba2\u63d0\u4f9b\u6839\u672c\u9075\u5faa",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4e60\u8fd1\u5e73\u5b66\u4e60\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "\u672c\u4eba\u5b66\u4e60\u5168\u4f1a\u7cbe\u795e\u7684\u8bb2\u8bdd\u88ab\u8bb0\u8f7d\u4e8e\u8be5\u6765\u6e90",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/gaobiaozhun-gaozhiliang-fazhan-dangyuan-gongzuo",
+        "relationship": "\u5173\u4e8e\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u8bba\u8ff0\u7684\u76f8\u5173\u6765\u6e90",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u653f\u6cbb\u6807\u51c6",
+        "relationship": "\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u9690\u542b\u653f\u6cbb\u6807\u51c6\u8981\u6c42",
+        "confidence": 0.65,
+        "type": "AMBIGUOUS"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\entities\\\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3.md": {
+    "hash": "d89a321d3e1fde41b436cf8a458c5ae9fa251850b1ac712d43f1dec24c7c1e51",
+    "edges": [
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73",
+        "relationship": "\u4e60\u8fd1\u5e73\u540c\u5fd7\u662f\u8fd9\u4e00\u601d\u60f3\u7684\u4e3b\u8981\u521b\u7acb\u8005\u548c\u6838\u5fc3\u4ee3\u8868\u4eba\u7269",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u53d1\u5c55\u515a\u5458\u5de5\u4f5c",
+        "relationship": "\u4f5c\u4e3a\u6839\u672c\u6307\u5bfc\u601d\u60f3\uff0c\u5f15\u9886\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u7684\u6b63\u786e\u653f\u6cbb\u65b9\u5411",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u5168\u9762\u4ece\u4e25\u6cbb\u515a",
+        "relationship": "\u4e3a\u5168\u9762\u4ece\u4e25\u6cbb\u515a\u63d0\u4f9b\u7406\u8bba\u6307\u5bfc\u548c\u6839\u672c\u9075\u5faa",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u515a\u7684\u81ea\u6211\u9769\u547d",
+        "relationship": "\u63a8\u52a8\u515a\u7684\u81ea\u6211\u9769\u547d\uff0c\u786e\u4fdd\u5148\u8fdb\u6027\u548c\u7eaf\u6d01\u6027",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u7ec6\u5219",
+        "relationship": "\u6307\u5bfc\u8be5\u7ec6\u5219\u7684\u4fee\u8ba2\uff0c\u786e\u7acb\u9996\u8981\u653f\u6cbb\u6807\u51c6",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a",
+        "relationship": "\u662f\u65b0\u65f6\u4ee3\u4e2d\u56fd\u5171\u4ea7\u515a\u575a\u6301\u548c\u53d1\u5c55\u9a6c\u514b\u601d\u4e3b\u4e49\u4e2d\u56fd\u5316\u65f6\u4ee3\u5316\u7684\u6700\u65b0\u7406\u8bba\u6210\u679c",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\entities\\\u515a\u7684\u81ea\u6211\u9769\u547d.md": {
+    "hash": "6958f9e81c16cc4914f414c99d9ef5b153f14a9e6c5e6693fca1be6110ec8bc1",
+    "edges": [
+      {
+        "to": "concepts/\u5168\u9762\u4ece\u4e25\u6cbb\u515a",
+        "relationship": "is a core proposition of",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5e72\u90e8\u961f\u4f0d\u5efa\u8bbe",
+        "relationship": "connected to cadre selection and encouragement",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u53d1\u5c55\u515a\u5458\u5de5\u4f5c",
+        "relationship": "involves high-standard development of Party members",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u653f\u6cbb\u6807\u51c6",
+        "relationship": "involves political standards and discipline",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u9ad8\u8d28\u91cf\u53d1\u5c55",
+        "relationship": "integrated with high-quality development strategy",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73",
+        "relationship": "originates from Xi Jinping's concept of the 'second answer'",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3",
+        "relationship": "guided by Xi Jinping Thought on socialism with Chinese characteristics",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/gaobiaozhun-gaozhiliang-fazhan-dangyuan-gongzuo",
+        "relationship": "referenced as source for development work",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4e60\u8fd1\u5e73\u5b66\u4e60\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "referenced as source for studying Fourth Plenum spirit",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4ee5\u6b63\u786e\u9009\u4eba\u7528\u4eba\u5bfc\u5411\u6fc0\u52b1\u5e72\u90e8\u62c5\u5f53\u4f5c\u4e3a",
+        "relationship": "referenced as source for correct selection orientation",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\entities\\\u5b9e\u4f53\u7ecf\u6d4e.md": {
+    "hash": "3c118c05e4ae9831c45ba0f2d8abe1f277e6e930954144862818025550e2f14d",
+    "edges": [
+      {
+        "to": "entities/\u9ad8\u8d28\u91cf\u53d1\u5c55",
+        "relationship": "\u5b9e\u4f53\u7ecf\u6d4e\u662f\u9ad8\u8d28\u91cf\u53d1\u5c55\u7684\u6839\u57fa\u548c\u7269\u8d28\u524d\u63d0",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u65b0\u8d28\u751f\u4ea7\u529b",
+        "relationship": "\u5b9e\u4f53\u7ecf\u6d4e\u9700\u8981\u65b0\u8d28\u751f\u4ea7\u529b\u5f15\u9886\uff0c\u63a8\u52a8\u4ea7\u4e1a\u5347\u7ea7\u4e0e\u521b\u65b0\u57f9\u80b2",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4e2d\u56fd\u5171\u4ea7\u515a\u7b2c\u4e8c\u5341\u5c4a\u4e2d\u592e\u59d4\u5458\u4f1a\u7b2c\u56db\u6b21\u5168\u4f53\u4f1a\u8bae\u516c\u62a5",
+        "relationship": "\u8be5\u516c\u62a5\u5f3a\u8c03\u5de9\u56fa\u58ee\u5927\u5b9e\u4f53\u7ecf\u6d4e\u6839\u57fa",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u5341\u4e94\u4e94\u89c4\u5212\u5efa\u8bae\u89e3\u8bfb",
+        "relationship": "\u5341\u4e94\u4e94\u89c4\u5212\u5efa\u8bae\u5c06\u5b9e\u4f53\u7ecf\u6d4e\u5217\u4e3a\u6218\u7565\u4efb\u52a1\u9996\u8981\u4f4d\u7f6e",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u594b\u8fdb\u5341\u4e94\u4e94\u9ad8\u8d28\u91cf\u53d1\u5c55\u65b0\u56fe\u666f",
+        "relationship": "\u8be5\u56fe\u666f\u63cf\u7ed8\u5b9e\u4f53\u7ecf\u6d4e\u53d1\u5c55\u8def\u5f84\u4e0e\u56fa\u672c\u5347\u7ea7\u65b9\u5411",
+        "confidence": 0.7,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u89e3\u8bfb\u515a\u7684\u4e8c\u5341\u5c4a\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "\u7cbe\u795e\u89e3\u8bfb\u9610\u8ff0\u5b9e\u4f53\u7ecf\u6d4e\u4f5c\u4e3a\u56fd\u6c11\u7ecf\u6d4e\u6839\u57fa\u7684\u5730\u4f4d",
+        "confidence": 0.7,
+        "type": "INFERRED"
+      },
+      {
+        "to": "overview (synthesis)",
+        "relationship": "\u6982\u8ff0\u4e2d\u6574\u5408\u4e86\u5b9e\u4f53\u7ecf\u6d4e\u4e0e\u73b0\u4ee3\u5316\u4ea7\u4e1a\u4f53\u7cfb\u7684\u76f8\u5173\u8bba\u8ff0",
+        "confidence": 0.7,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\entities\\\u5e72\u90e8\u961f\u4f0d\u5efa\u8bbe.md": {
+    "hash": "e63fe63c903701f77bc0971d2bd75a9984fce1459468defca3020b31eb22419d",
+    "edges": [
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a",
+        "relationship": "is core component of organizational line of the Party",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u653f\u6cbb\u6807\u51c6",
+        "relationship": "prioritizes political standards in cadre selection",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u53d1\u5c55\u515a\u5458\u5de5\u4f5c",
+        "relationship": "encompasses the work of developing Party members",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u7ec6\u5219",
+        "relationship": "references and is governed by the revised rules",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73",
+        "relationship": "based on the cadre standards set by Xi Jinping",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u515a\u7684\u81ea\u6211\u9769\u547d",
+        "relationship": "aligned with and supports the Party's self-revolution",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316",
+        "relationship": "contributes to Chinese modernization through talent support",
+        "confidence": 0.6,
+        "type": "AMBIGUOUS"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\entities\\\u65b0\u8d28\u751f\u4ea7\u529b.md": {
+    "hash": "ac3270db840a50f120300b1cb4d8e1ec175ee3dba31957e4f43fac357a5fe10f",
+    "edges": [
+      {
+        "to": "entities/\u9ad8\u8d28\u91cf\u53d1\u5c55",
+        "relationship": "\u65b0\u8d28\u751f\u4ea7\u529b\u662f\u63a8\u52a8\u9ad8\u8d28\u91cf\u53d1\u5c55\u7684\u6838\u5fc3\u5f15\u64ce",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5b9e\u4f53\u7ecf\u6d4e",
+        "relationship": "\u65b0\u8d28\u751f\u4ea7\u529b\u5de9\u56fa\u58ee\u5927\u5b9e\u4f53\u7ecf\u6d4e\u6839\u57fa",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316",
+        "relationship": "\u65b0\u8d28\u751f\u4ea7\u529b\u592f\u5b9e\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316\u7684\u57fa\u7840",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73",
+        "relationship": "\u65b0\u8d28\u751f\u4ea7\u529b\u6982\u5ff5\u7531\u4e60\u8fd1\u5e73\u63d0\u51fa\u5e76\u5f3a\u8c03",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3",
+        "relationship": "\u65b0\u8d28\u751f\u4ea7\u529b\u662f\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3\u7684\u91cd\u8981\u7ec4\u6210\u90e8\u5206",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a",
+        "relationship": "\u65b0\u8d28\u751f\u4ea7\u529b\u662f\u4e2d\u56fd\u5171\u4ea7\u515a\u7684\u6218\u7565\u6982\u5ff5",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\entities\\\u9ad8\u8d28\u91cf\u53d1\u5c55.md": {
+    "hash": "76325c1723471f40e52fe6b3b309d84e36faafe2761c4ac0e1b45026855960a1",
+    "edges": [
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a",
+        "relationship": "\u575a\u6301\u515a\u7684\u5168\u9762\u9886\u5bfc\u662f\u9ad8\u8d28\u91cf\u53d1\u5c55\u7684\u6839\u672c\u4fdd\u969c",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u5168\u9762\u4ece\u4e25\u6cbb\u515a",
+        "relationship": "\u575a\u6301\u5168\u9762\u4ece\u4e25\u6cbb\u515a\u662f\u9ad8\u8d28\u91cf\u53d1\u5c55\u7684\u91cd\u8981\u4fdd\u969c",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5e72\u90e8\u961f\u4f0d\u5efa\u8bbe",
+        "relationship": "\u9ad8\u7d20\u8d28\u5e72\u90e8\u961f\u4f0d\u662f\u9ad8\u8d28\u91cf\u53d1\u5c55\u7684\u5173\u952e\u652f\u6491",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "concepts/\u653f\u6cbb\u6807\u51c6",
+        "relationship": "\u653f\u6cbb\u6807\u51c6\u8d2f\u7a7f\u9ad8\u8d28\u91cf\u53d1\u5c55\u5b9e\u8df5",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5b9e\u4f53\u7ecf\u6d4e",
+        "relationship": "\u5de9\u56fa\u58ee\u5927\u5b9e\u4f53\u7ecf\u6d4e\u6839\u57fa\u662f\u9ad8\u8d28\u91cf\u53d1\u5c55\u7684\u6838\u5fc3\u5185\u5bb9",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\sources\\gaobiaozhun-gaozhiliang-fazhan-dangyuan-gongzuo.md": {
+    "hash": "357e2aca8c0560aecf57353b3ac844eff4bdc14cd0b7e0205b8c41ba46cdfbf5",
+    "edges": [
+      {
+        "to": "entities/\u5e72\u90e8\u961f\u4f0d\u5efa\u8bbe",
+        "relationship": "\u53d1\u5c55\u515a\u5458\u662f\u5e72\u90e8\u961f\u4f0d\u5efa\u8bbe\u7684\u57fa\u7840\u548c\u5165\u53e3",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u515a\u7684\u81ea\u6211\u9769\u547d",
+        "relationship": "\u575a\u6301\u653f\u6cbb\u6807\u51c6\u3001\u4f18\u5316\u7ed3\u6784\u3001\u4e25\u8083\u7eaa\u5f8b\u662f\u515a\u7684\u81ea\u6211\u9769\u547d\u7684\u5177\u4f53\u4f53\u73b0",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316",
+        "relationship": "\u9ad8\u8d28\u91cf\u505a\u597d\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\u4e3a\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316\u63d0\u4f9b\u7ec4\u7ec7\u4fdd\u8bc1",
+        "confidence": 0.75,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u9ad8\u8d28\u91cf\u53d1\u5c55",
+        "relationship": "\u6807\u9898\u5f3a\u8c03\u2018\u9ad8\u6807\u51c6\u9ad8\u8d28\u91cf\u2019\u505a\u597d\u53d1\u5c55\u515a\u5458\u5de5\u4f5c\uff0c\u4e0e\u9ad8\u8d28\u91cf\u53d1\u5c55\u7406\u5ff5\u76f8\u5951\u5408",
+        "confidence": 0.7,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4ee5\u6b63\u786e\u9009\u4eba\u7528\u4eba\u5bfc\u5411\u6fc0\u52b1\u5e72\u90e8\u62c5\u5f53\u4f5c\u4e3a",
+        "relationship": "\u90fd\u5f3a\u8c03\u653f\u6cbb\u6807\u51c6\uff0c\u53d1\u5c55\u515a\u5458\u662f\u9009\u4eba\u7528\u4eba\u7684\u6e90\u5934",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\sources\\\u4e2d\u56fd\u5171\u4ea7\u515a\u7b2c\u4e8c\u5341\u5c4a\u4e2d\u592e\u59d4\u5458\u4f1a\u7b2c\u56db\u6b21\u5168\u4f53\u4f1a\u8bae\u516c\u62a5.md": {
+    "hash": "466efc76d5adf7e6f63d59d74cef5b4e6232559f62ff06c1e1351ff5340b76ca",
+    "edges": [
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a",
+        "relationship": "this document is an official communique of the Communist Party of China",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73",
+        "relationship": "this document is associated with Xi Jinping's leadership",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3",
+        "relationship": "this document implements Xi Jinping Thought on Socialism with Chinese Characteristics for a New Era",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5b9e\u4f53\u7ecf\u6d4e",
+        "relationship": "this document emphasizes strengthening the real economy",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4e60\u8fd1\u5e73\u5b66\u4e60\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "this source is the subject of study in the related source",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u5341\u4e94\u4e94\u89c4\u5212\u5efa\u8bae\u89e3\u8bfb",
+        "relationship": "this source is the original document interpreted by the related source",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u594b\u8fdb\u5341\u4e94\u4e94\u9ad8\u8d28\u91cf\u53d1\u5c55\u65b0\u56fe\u666f",
+        "relationship": "this source is a foundational document for the related source",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u89e3\u8bfb\u515a\u7684\u4e8c\u5341\u5c4a\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "this source is the original communique interpreted by the related source",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "overview",
+        "relationship": "this source contributes to the synthesis overview",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\sources\\\u4e60\u8fd1\u5e73\u5b66\u4e60\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e.md": {
+    "hash": "33ba6ef47c796c71feb57b4aa29fba4f3d224d6df93df5f42b229549958cae33",
+    "edges": [
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73",
+        "relationship": "\u8bb2\u8bdd\u4e3b\u4f53",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3",
+        "relationship": "\u6307\u5bfc\u601d\u60f3",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u515a\u7684\u81ea\u6211\u9769\u547d",
+        "relationship": "\u63d0\u53ca",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u5e72\u90e8\u961f\u4f0d\u5efa\u8bbe",
+        "relationship": "\u63d0\u53ca",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u65b0\u8d28\u751f\u4ea7\u529b",
+        "relationship": "\u63d0\u53ca",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u9ad8\u8d28\u91cf\u53d1\u5c55",
+        "relationship": "\u63d0\u53ca",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316",
+        "relationship": "\u63d0\u53ca",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u5341\u4e94\u4e94\u89c4\u5212\u5efa\u8bae\u89e3\u8bfb",
+        "relationship": "\u76f8\u5173\u8bae\u9898",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u594b\u8fdb\u5341\u4e94\u4e94\u9ad8\u8d28\u91cf\u53d1\u5c55\u65b0\u56fe\u666f",
+        "relationship": "\u76f8\u5173\u8bae\u9898",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u89e3\u8bfb\u515a\u7684\u4e8c\u5341\u5c4a\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "\u76f8\u5173\u8bae\u9898",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4e2d\u56fd\u5171\u4ea7\u515a\u7b2c\u4e8c\u5341\u5c4a\u4e2d\u592e\u59d4\u5458\u4f1a\u7b2c\u56db\u6b21\u5168\u4f53\u4f1a\u8bae\u516c\u62a5",
+        "relationship": "\u6838\u5fc3\u6587\u4ef6",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\sources\\\u5341\u4e94\u4e94\u89c4\u5212\u5efa\u8bae\u89e3\u8bfb.md": {
+    "hash": "d6a4d04ae2a51f1b380839a77668e17f198bc715460aec21e582356b66582238",
+    "edges": [
+      {
+        "to": "concepts/\u5168\u9762\u4ece\u4e25\u6cbb\u515a",
+        "relationship": "emphasizes as a fundamental guarantee in the five requirements",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3",
+        "relationship": "guides the development of the 15th Five-Year Plan",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u594b\u8fdb\u5341\u4e94\u4e94\u9ad8\u8d28\u91cf\u53d1\u5c55\u65b0\u56fe\u666f",
+        "relationship": "same thematic focus on 15th Five-Year Plan and high-quality development",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4e2d\u56fd\u5171\u4ea7\u515a\u7b2c\u4e8c\u5341\u5c4a\u4e2d\u592e\u59d4\u5458\u4f1a\u7b2c\u56db\u6b21\u5168\u4f53\u4f1a\u8bae\u516c\u62a5",
+        "relationship": "provides strategic context for the 15th Five-Year Plan",
+        "confidence": 0.7,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u89e3\u8bfb\u515a\u7684\u4e8c\u5341\u5c4a\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "interpretation of Fourth Plenum decisions relevant to planning advice",
+        "confidence": 0.7,
+        "type": "INFERRED"
+      },
+      {
+        "to": "overview",
+        "relationship": "contributes to the overall synthesis of the wiki",
+        "confidence": 0.75,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\sources\\\u594b\u8fdb\u5341\u4e94\u4e94\u9ad8\u8d28\u91cf\u53d1\u5c55\u65b0\u56fe\u666f.md": {
+    "hash": "0a1b77984336fde7d8f4e43e9869c8e99ecfcd12f8fe4dfdd0d15a54ad9d3853",
+    "edges": [
+      {
+        "to": "entities/\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316",
+        "relationship": "describes path to Chinese modernization through \u5341\u4e94\u4e94 planning",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3",
+        "relationship": "guided by Xi Jinping Thought on Socialism with Chinese Characteristics for a New Era",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4e2d\u56fd\u5171\u4ea7\u515a\u7b2c\u4e8c\u5341\u5c4a\u4e2d\u592e\u59d4\u5458\u4f1a\u7b2c\u56db\u6b21\u5168\u4f53\u4f1a\u8bae\u516c\u62a5",
+        "relationship": "directly interprets the spirit of the Fourth Plenary Session",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u5341\u4e94\u4e94\u89c4\u5212\u5efa\u8bae\u89e3\u8bfb",
+        "relationship": "closely related as both analyze the 15th Five-Year Plan",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u89e3\u8bfb\u515a\u7684\u4e8c\u5341\u5c4a\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e",
+        "relationship": "complementary source interpreting the same meeting",
+        "confidence": 0.85,
+        "type": "INFERRED"
+      }
+    ]
+  },
+  "C:\\Users\\ChengCihang\\VSCode\\llm-wiki-agent\\wiki\\sources\\\u89e3\u8bfb\u515a\u7684\u4e8c\u5341\u5c4a\u56db\u4e2d\u5168\u4f1a\u7cbe\u795e.md": {
+    "hash": "5123bd7e94fae7ffcd0cb5144ad07c1420ad627fda8d22d9d2d3ffe95c923007",
+    "edges": [
+      {
+        "to": "entities/\u4e2d\u56fd\u5171\u4ea7\u515a",
+        "relationship": "is about the Chinese Communist Party and its fourth plenum",
+        "confidence": 1.0,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e2d\u56fd\u5f0f\u73b0\u4ee3\u5316",
+        "relationship": "discusses Chinese-style modernization in context of the five-year plan",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73",
+        "relationship": "implicitly refers to Xi Jinping as party leader guiding the plenum",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "entities/\u4e60\u8fd1\u5e73\u65b0\u65f6\u4ee3\u4e2d\u56fd\u7279\u8272\u793e\u4f1a\u4e3b\u4e49\u601d\u60f3",
+        "relationship": "the guiding thought underlying the plenum's proposals",
+        "confidence": 0.8,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u4e2d\u56fd\u5171\u4ea7\u515a\u7b2c\u4e8c\u5341\u5c4a\u4e2d\u592e\u59d4\u5458\u4f1a\u7b2c\u56db\u6b21\u5168\u4f53\u4f1a\u8bae\u516c\u62a5",
+        "relationship": "interprets the same party plenum's communiqu\u00e9",
+        "confidence": 0.95,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u5341\u4e94\u4e94\u89c4\u5212\u5efa\u8bae\u89e3\u8bfb",
+        "relationship": "directly related to the 15th Five-Year Plan suggestions discussed",
+        "confidence": 0.9,
+        "type": "INFERRED"
+      },
+      {
+        "to": "sources/\u594b\u8fdb\u5341\u4e94\u4e94\u9ad8\u8d28\u91cf\u53d1\u5c55\u65b0\u56fe\u666f",
+        "relationship": "shares theme of high-quality development in the 15th Five-Year Plan",
         "confidence": 0.85,
         "type": "INFERRED"
       }

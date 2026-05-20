@@ -31,7 +31,7 @@ REPO_ROOT = Path(__file__).parent.parent
 WIKI_DIR = REPO_ROOT / "wiki"
 INDEX_FILE = WIKI_DIR / "index.md"
 LOG_FILE = WIKI_DIR / "log.md"
-SCHEMA_FILE = REPO_ROOT / "CLAUDE.md"
+SCHEMA_FILE = REPO_ROOT / "AGENTS.md"
 
 
 def read_file(path: Path) -> str:
@@ -52,10 +52,10 @@ def call_llm(prompt: str, model_env: str, default_model: str, max_tokens: int = 
         sys.exit(1)
         
     model = os.getenv(model_env, default_model)
-    
+
     kwargs = {
         "model": model,
-        "messages": [{"role": "user", "content": prompt}]
+        "messages": [{"role": "system", "content": prompt}]
     }
     
     if max_tokens:
@@ -142,11 +142,13 @@ def query(question: str, save_path: str | None = None):
         sys.exit(1)
 
     # Step 2: Find relevant pages
+    # todo 这里可以优化成向量搜索
     relevant_pages = find_relevant_pages(question, index_content)
 
     # If no keyword match, ask Claude to identify relevant pages from the index
     if not relevant_pages or len(relevant_pages) <= 1:
         print("  selecting relevant pages via API...")
+        # 提示词，让llm判断哪些页面的内容最相关
         prompt = f"Given this wiki index:\n\n{index_content}\n\nWhich pages are most relevant to answering: \"{question}\"\n\nReturn ONLY a JSON array of relative file paths (as listed in the index), e.g. [\"sources/foo.md\", \"concepts/Bar.md\"]. Maximum 10 pages."
         raw = call_llm(prompt, "LLM_MODEL_FAST", "claude-3-5-haiku-latest", max_tokens=512)
         raw = raw.strip()

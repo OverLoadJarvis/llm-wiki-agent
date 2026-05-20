@@ -38,7 +38,7 @@ WIKI_DIR = REPO_ROOT / "wiki"
 GRAPH_DIR = REPO_ROOT / "graph"
 GRAPH_JSON = GRAPH_DIR / "graph.json"
 LOG_FILE = WIKI_DIR / "log.md"
-SCHEMA_FILE = REPO_ROOT / "CLAUDE.md"
+SCHEMA_FILE = REPO_ROOT / "AGENTS.md"
 
 
 def read_file(path: Path) -> str:
@@ -56,7 +56,7 @@ def call_llm(prompt: str, model_env: str, default_model: str, max_tokens: int = 
     
     kwargs = {
         "model": model,
-        "messages": [{"role": "user", "content": prompt}]
+        "messages": [{"role": "system", "content": prompt}]
     }
     
     if max_tokens:

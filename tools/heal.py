@@ -29,15 +29,18 @@ REPO_ROOT = Path(__file__).parent.parent
 WIKI_DIR = REPO_ROOT / "wiki"
 ENTITIES_DIR = WIKI_DIR / "entities"
 
-def call_llm(prompt: str, max_tokens: int = 1500) -> str:
+def call_llm(prompt: str, max_tokens: int = 8192) -> str:
     # Use litellm standard environment variables
     # e.g., GEMINI_API_KEY, ANTHROPIC_API_KEY, OPENAI_API_KEY
     model = os.getenv("LLM_MODEL", "claude-3-5-haiku-latest") # default to fast model
-    
+    api_base = os.getenv("OPENAI_API_BASE")
+    api_key = os.getenv("OPENAI_API_KEY")
     response = completion(
         model=model,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=max_tokens
+        messages=[{"role": "system", "content": prompt}],
+        max_tokens=max_tokens,
+        api_base=api_base,
+        api_key=api_key
     )
     return response.choices[0].message.content
 
