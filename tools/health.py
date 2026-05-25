@@ -34,7 +34,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from tools._utils import (
     REPO_ROOT, WIKI_DIR, INDEX_FILE, LOG_FILE,
-    read_file, all_wiki_pages, strip_frontmatter,
+    read_file, write_file, all_wiki_pages, strip_frontmatter, page_id,
+    file_exists, is_db_mode, use_storage,
 )
 
 # Minimum content length (excluding frontmatter) to not be considered a stub
@@ -51,7 +52,7 @@ def check_empty_files(pages: list[Path], threshold: int = STUB_THRESHOLD_CHARS) 
         body = strip_frontmatter(raw)
         if len(body) < threshold:
             results.append({
-                "path": str(p.relative_to(REPO_ROOT)),
+                "path": page_id(p) + ".md",
                 "total_bytes": len(raw),
                 "body_bytes": len(body),
                 "status": "empty" if len(body) == 0 else "stub",
@@ -72,20 +73,9 @@ def _parse_index_links(index_content: str) -> set[str]:
 
 
 def check_index_sync(pages: list[Path]) -> dict:
-    """Compare wiki/index.md entries against actual files on disk.
-
-    Returns:
-        {
-            "in_index_not_on_disk": [...],   # stale index entries
-            "on_disk_not_in_index": [...],   # missing from index
-        }
-    """
     index_content = read_file(INDEX_FILE)
     index_links = _parse_index_links(index_content)
 
-    # Normalize index links to absolute paths for comparison
-    # overview.md is listed under ## Overview, not in the per-type sections.
-    # Exclude it from both sides to avoid false positives.
     meta_pages = {"overview.md"}
 
     index_paths = set()
@@ -97,15 +87,36 @@ def check_index_sync(pages: list[Path]) -> dict:
     disk_paths = set()
     for p in pages:
         if p.name not in meta_pages:
-            disk_paths.add(p.resolve())
+            if is_db_mode():
+                disk_paths.add(str(page_id(p)) + ".md")
+            else:
+                disk_paths.add(p.resolve())
 
-    in_index_not_on_disk = [
-        str(p.relative_to(REPO_ROOT)) for p in sorted(index_paths - disk_paths)
-        if REPO_ROOT in p.parents or p == REPO_ROOT
-    ]
-    on_disk_not_in_index = [
-        str(p.relative_to(REPO_ROOT)) for p in sorted(disk_paths - index_paths)
-    ]
+    in_index_not_on_disk: list[str] = []
+    for p in sorted(index_paths):
+        if is_db_mode():
+            disk_key = str(p.relative_to(WIKI_DIR).as_posix())
+            if disk_key not in disk_paths:
+                in_index_not_on_disk.append(f"wiki/{disk_key}")
+        else:
+            if p not in disk_paths:
+                rel = str(p.relative_to(REPO_ROOT))
+                in_index_not_on_disk.append(rel)
+
+    on_disk_not_in_index: list[str] = []
+    for p in sorted(disk_paths):
+        if is_db_mode():
+            found = False
+            for ip in index_paths:
+                if str(ip.relative_to(WIKI_DIR).as_posix()) == p:
+                    found = True
+                    break
+            if not found:
+                on_disk_not_in_index.append(f"wiki/{p}")
+        else:
+            if p not in index_paths:
+                rel = str(Path(p).relative_to(REPO_ROOT)) if isinstance(p, Path) else str(p)
+                on_disk_not_in_index.append(rel)
 
     return {
         "in_index_not_on_disk": in_index_not_on_disk,
@@ -128,31 +139,23 @@ def _parse_log_entries(log_content: str) -> set[str]:
 
 
 def check_log_coverage(pages: list[Path]) -> list[dict]:
-    """Find source pages that have no corresponding ingest entry in log.md.
-
-    Only checks wiki/sources/*.md — entity/concept pages are created as
-    side-effects of ingest and don't need their own log entry.
-    """
     log_content = read_file(LOG_FILE)
     logged_titles = _parse_log_entries(log_content)
 
-    source_dir = WIKI_DIR / "sources"
-    if not source_dir.exists():
+    source_pages = [p for p in pages if "sources/" in page_id(p)]
+    if not source_pages:
         return []
 
     missing = []
-    for p in sorted(source_dir.glob("*.md")):
-        # Try matching by slug (filename without .md) or by frontmatter title
+    for p in sorted(source_pages):
         slug = p.stem.lower().replace("-", " ").replace("_", " ")
-
-        # Also try extracting title from frontmatter
         content = read_file(p)
         title_match = re.search(r'^title:\s*["\']?(.+?)["\']?\s*$', content, re.MULTILINE)
         fm_title = title_match.group(1).strip().lower() if title_match else ""
 
         if slug not in logged_titles and fm_title not in logged_titles:
             missing.append({
-                "path": str(p.relative_to(REPO_ROOT)),
+                "path": page_id(p) + ".md",
                 "slug": p.stem,
                 "title": fm_title or p.stem,
             })
@@ -243,11 +246,22 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Structural health checks for the LLM Wiki (deterministic, no LLM calls)"
     )
+    parser.add_argument("--project", type=str, default=None, help="Project name (DB mode)")
     parser.add_argument("--save", action="store_true",
                         help="Save report to wiki/health-report.md")
     parser.add_argument("--json", action="store_true",
                         help="Output machine-readable JSON instead of markdown")
     args = parser.parse_args()
+
+    if args.project:
+        from storage.db import WikiStorage
+        db = WikiStorage("storage/wiki.db")
+        proj = db.get_project_by_name(args.project)
+        if not proj:
+            print(f"Error: project '{args.project}' not found.")
+            sys.exit(1)
+        use_storage(db, proj["id"])
+        print(f"[DB mode] Using project: {args.project} (id={proj['id']})")
 
     results = run_health()
 
@@ -259,5 +273,5 @@ if __name__ == "__main__":
 
         if args.save:
             report_path = WIKI_DIR / "health-report.md"
-            report_path.write_text(report, encoding="utf-8")
-            print(f"\nSaved: {report_path.relative_to(REPO_ROOT)}")
+            write_file(report_path, report)
+            print(f"\nSaved: wiki/health-report.md")

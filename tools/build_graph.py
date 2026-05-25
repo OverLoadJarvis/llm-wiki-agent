@@ -32,9 +32,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from tools._utils import (
     REPO_ROOT, WIKI_DIR, GRAPH_DIR, GRAPH_JSON,
-    read_file, call_llm, sha256, all_wiki_pages,
+    read_file, write_file, call_llm, sha256, all_wiki_pages,
     extract_wikilinks_unique as extract_wikilinks,
-    extract_frontmatter_type, page_id,
+    extract_frontmatter_type, page_id, append_log,
+    file_exists, ensure_dir, delete_file, is_db_mode, use_storage,
 )
 
 try:
@@ -70,17 +71,17 @@ def edge_id(src: str, target: str, edge_type: str) -> str:
 
 
 def load_cache() -> dict:
-    if CACHE_FILE.exists():
+    if file_exists(CACHE_FILE):
         try:
-            return json.loads(CACHE_FILE.read_text())
+            return json.loads(read_file(CACHE_FILE))
         except (json.JSONDecodeError, IOError):
             return {}
     return {}
 
 
 def save_cache(cache: dict):
-    GRAPH_DIR.mkdir(parents=True, exist_ok=True)
-    CACHE_FILE.write_text(json.dumps(cache, indent=2))
+    ensure_dir(GRAPH_DIR)
+    write_file(CACHE_FILE, json.dumps(cache, indent=2))
 
 
 def build_nodes(pages: list[Path]) -> list[dict]:
@@ -98,7 +99,7 @@ def build_nodes(pages: list[Path]) -> list[dict]:
             "label": label,
             "type": node_type,
             "color": TYPE_COLORS.get(node_type, TYPE_COLORS["unknown"]),
-            "path": str(p.relative_to(REPO_ROOT)),
+            "path": page_id(p) + ".md",
             "markdown": content,
             "preview": preview,
         })
@@ -132,11 +133,10 @@ def build_extracted_edges(pages: list[Path]) -> list[dict]:
 
 
 def load_checkpoint() -> tuple[list[dict], set[str]]:
-    """Load previously inferred edges from JSONL checkpoint file."""
     edges = []
     completed = set()
-    if INFERRED_EDGES_FILE.exists():
-        for line in INFERRED_EDGES_FILE.read_text(encoding="utf-8").splitlines():
+    if file_exists(INFERRED_EDGES_FILE):
+        for line in read_file(INFERRED_EDGES_FILE).splitlines():
             if not line.strip():
                 continue
             try:
@@ -162,11 +162,10 @@ def load_checkpoint() -> tuple[list[dict], set[str]]:
 
 
 def append_checkpoint(page_id_str: str, edges: list[dict]):
-    """Append one page's inferred edges to the JSONL checkpoint."""
-    GRAPH_DIR.mkdir(parents=True, exist_ok=True)
+    ensure_dir(GRAPH_DIR)
     record = {"page_id": page_id_str, "edges": edges, "ts": date.today().isoformat()}
-    with open(INFERRED_EDGES_FILE, "a", encoding="utf-8") as f:
-        f.write(json.dumps(record, ensure_ascii=False) + "\n")
+    existing = read_file(INFERRED_EDGES_FILE)
+    write_file(INFERRED_EDGES_FILE, existing + json.dumps(record, ensure_ascii=False) + "\n")
 
 
 def build_inferred_edges(pages: list[Path], existing_edges: list[dict], cache: dict, resume: bool = True) -> list[dict]:
@@ -1188,22 +1187,19 @@ def build_graph(infer: bool = True, open_browser: bool = False, clean: bool = Fa
         return
 
     print(f"Building graph from {len(pages)} wiki pages...")
-    GRAPH_DIR.mkdir(parents=True, exist_ok=True)
+    ensure_dir(GRAPH_DIR)
 
-    # Clean checkpoint if requested
-    if clean and INFERRED_EDGES_FILE.exists():
-        INFERRED_EDGES_FILE.unlink()
+    if clean and file_exists(INFERRED_EDGES_FILE):
+        delete_file(INFERRED_EDGES_FILE)
         print("  cleaned: removed inference checkpoint")
 
     cache = load_cache()
 
-    # Pass 1: extracted edges
     print("  Pass 1: extracting wikilinks...")
     nodes = build_nodes(pages)
     edges = build_extracted_edges(pages)
     print(f"  → {len(edges)} extracted edges")
 
-    # Pass 2: inferred edges
     if infer:
         print("  Pass 2: inferring semantic relationships...")
         inferred = build_inferred_edges(pages, edges, cache, resume=not clean)
@@ -1211,13 +1207,11 @@ def build_graph(infer: bool = True, open_browser: bool = False, clean: bool = Fa
         print(f"  → {len(inferred)} inferred edges")
         save_cache(cache)
 
-    # Deduplicate edges
     before_dedup = len(edges)
     edges = deduplicate_edges(edges)
     if before_dedup != len(edges):
         print(f"  dedup: {before_dedup} → {len(edges)} edges")
 
-    # Community detection
     print("  Running Louvain community detection...")
     communities = detect_communities(nodes, edges)
     for node in nodes:
@@ -1226,29 +1220,25 @@ def build_graph(infer: bool = True, open_browser: bool = False, clean: bool = Fa
             node["color"] = COMMUNITY_COLORS[comm_id % len(COMMUNITY_COLORS)]
         node["group"] = comm_id
 
-    # Compute degree-based node sizing (value) for vis.js scaling
     degree_map: dict[str, int] = {}
     for e in edges:
         degree_map[e["from"]] = degree_map.get(e["from"], 0) + 1
         degree_map[e["to"]] = degree_map.get(e["to"], 0) + 1
     for node in nodes:
-        node["value"] = degree_map.get(node["id"], 0) + 1  # +1 so isolated nodes are still visible
+        node["value"] = degree_map.get(node["id"], 0) + 1
 
-    # Save graph.json
     graph_data = {"nodes": nodes, "edges": edges, "built": today}
-    GRAPH_JSON.write_text(json.dumps(graph_data, indent=2, ensure_ascii=False))
+    write_file(GRAPH_JSON, json.dumps(graph_data, indent=2, ensure_ascii=False))
     print(f"  saved: graph/graph.json  ({len(nodes)} nodes, {len(edges)} edges)")
 
-    # Save graph.html
     html = render_html(nodes, edges)
-    GRAPH_HTML.write_text(html, encoding="utf-8")
+    write_file(GRAPH_HTML, html)
     print(f"  saved: graph/graph.html")
 
     n_ext = len([e for e in edges if e['type']=='EXTRACTED'])
     n_inf = len([e for e in edges if e['type'] in ('INFERRED', 'AMBIGUOUS')])
     append_log(f"## [{today}] graph | Knowledge graph rebuilt\n\n{len(nodes)} nodes, {len(edges)} edges ({n_ext} extracted, {n_inf} inferred).")
 
-    # Generate health report
     if report:
         if not HAS_NETWORKX:
             print("Warning: networkx not installed. Cannot generate report.")
@@ -1257,21 +1247,36 @@ def build_graph(infer: bool = True, open_browser: bool = False, clean: bool = Fa
             print("\n" + report_text)
             if save:
                 report_path = GRAPH_DIR / "graph-report.md"
-                report_path.write_text(report_text, encoding="utf-8")
-                print(f"  saved: {report_path.relative_to(REPO_ROOT)}")
+                write_file(report_path, report_text)
+                print(f"  saved: {report_path.relative_to(REPO_ROOT) if not is_db_mode() else 'graph/graph-report.md'}")
             append_log(f"## [{today}] report | Graph health report generated\n\n{len(nodes)} nodes analyzed.")
 
     if open_browser:
-        webbrowser.open(f"file://{GRAPH_HTML.resolve()}")
+        if not is_db_mode():
+            webbrowser.open(f"file://{GRAPH_HTML.resolve()}")
+        else:
+            print("  [skip] browser open not supported in DB mode")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Build LLM Wiki knowledge graph")
+    parser.add_argument("--project", type=str, default=None, help="Project name (DB mode)")
     parser.add_argument("--no-infer", action="store_true", help="Skip semantic inference (faster)")
     parser.add_argument("--open", action="store_true", help="Open graph.html in browser")
     parser.add_argument("--clean", action="store_true", help="Delete checkpoint and force full re-inference")
     parser.add_argument("--report", action="store_true", help="Generate graph health report")
     parser.add_argument("--save", action="store_true", help="Save report to graph/graph-report.md")
     args = parser.parse_args()
+
+    if args.project:
+        from storage.db import WikiStorage
+        db = WikiStorage("storage/wiki.db")
+        proj = db.get_project_by_name(args.project)
+        if not proj:
+            print(f"Error: project '{args.project}' not found.")
+            sys.exit(1)
+        use_storage(db, proj["id"])
+        print(f"[DB mode] Using project: {args.project} (id={proj['id']})")
+
     build_graph(infer=not args.no_infer, open_browser=args.open, clean=args.clean,
                 report=args.report, save=args.save)

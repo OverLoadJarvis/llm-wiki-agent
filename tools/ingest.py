@@ -34,9 +34,10 @@ from datetime import date
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from tools._utils import (
-    REPO_ROOT, WIKI_DIR, LOG_FILE, INDEX_FILE, OVERVIEW_FILE, SCHEMA_FILE,
+    REPO_ROOT, WIKI_DIR, RAW_DIR, LOG_FILE, INDEX_FILE, OVERVIEW_FILE, SCHEMA_FILE,
     read_file, write_file, call_llm, sha256,
-    extract_wikilinks, append_log, page_stem_set,
+    extract_wikilinks, append_log, page_stem_set, all_wiki_pages, page_id,
+    file_exists, file_mtime, list_dir, is_db_mode, use_storage,
 )
 
 # File extensions that can be auto-converted to markdown via markitdown.
@@ -52,21 +53,19 @@ ALL_SUPPORTED_EXTENSIONS = {".md"} | CONVERTIBLE_EXTENSIONS   # | 集合运算�
 
 
 def build_wiki_context() -> str:
-    """
-    构建Wiki上下文，返回字符串
-    """
     parts = []
-    if INDEX_FILE.exists():
+    if file_exists(INDEX_FILE):
         parts.append(f"## wiki/index.md\n{read_file(INDEX_FILE)}")
-    if OVERVIEW_FILE.exists():
+    if file_exists(OVERVIEW_FILE):
         parts.append(f"## wiki/overview.md\n{read_file(OVERVIEW_FILE)}")
-    # Include a few recent source pages for contradiction checking
     sources_dir = WIKI_DIR / "sources"
-    # 选择最新的5个摘要文件
-    if sources_dir.exists():
-        recent = sorted(sources_dir.glob("*.md"), key=lambda p: p.stat().st_mtime, reverse=True)[:5]
-        for p in recent:
-            parts.append(f"## {p.relative_to(REPO_ROOT)}\n{read_file(p)}")
+    recent = list_dir(sources_dir, "*.md")
+    recent.sort(key=lambda p: file_mtime(p) if is_db_mode() else p.stat().st_mtime, reverse=True)
+    for p in recent[:5]:
+        rel_path = p.as_posix()
+        if not is_db_mode():
+            rel_path = str(p.relative_to(REPO_ROOT))
+        parts.append(f"## {rel_path}\n{read_file(p)}")
     return "\n\n---\n\n".join(parts)
 
 
@@ -101,47 +100,39 @@ def update_index(new_entry: str, section: str = "Sources"):
 
 
 def validate_ingest(changed_pages: list[str] | None = None) -> dict:
-    """Validate wiki integrity after an ingest.
-
-    Checks:
-      1. Broken wikilinks in changed pages (or all pages if none specified)
-      2. Pages not registered in index.md
-
-    Returns dict with 'broken_links' and 'unindexed' lists.
-    检查指定页面或所有页面中的WikiLink是否损坏，以及是否未在索引中注册。
-    """
     existing_pages = page_stem_set()
     index_content = read_file(INDEX_FILE).lower()
 
-    # Determine which pages to scan for broken links
     if changed_pages:
-        scan_paths = [WIKI_DIR / p for p in changed_pages if (WIKI_DIR / p).exists()]
+        scan_paths = [WIKI_DIR / p for p in changed_pages if file_exists(WIKI_DIR / p)]
     else:
-        scan_paths = [p for p in WIKI_DIR.rglob("*.md")
-                      if p.name not in ("index.md", "log.md", "lint-report.md")]
+        scan_paths = [p for p in all_wiki_pages()]
 
-    # Check 1: Broken wikilinks
     broken_links = []
     for page_path in scan_paths:
         content = read_file(page_path)
-        rel = str(page_path.relative_to(WIKI_DIR))
+        rel = page_id(page_path)
         for link in extract_wikilinks(content):
-            # Normalize: strip paths, check stem only
             link_stem = Path(link).stem.lower() if '/' in link else link.lower()
             if link_stem not in existing_pages:
                 broken_links.append((rel, link))
 
-    # Check 2: Unindexed pages (only check changed pages)
     unindexed = []
     for p in (changed_pages or []):
         page_path = WIKI_DIR / p
-        if page_path.exists():
-            # Check if the page filename appears in index.md
+        if file_exists(page_path):
             stem = page_path.stem.lower()
             if stem not in index_content and p not in ("log.md", "overview.md"):
                 unindexed.append(p)
 
     return {"broken_links": broken_links, "unindexed": unindexed}
+
+
+def _to_db_path(path: Path) -> str:
+    try:
+        return path.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
 
 
 def convert_to_md(source: Path) -> Path:
@@ -181,23 +172,17 @@ def convert_to_md(source: Path) -> Path:
 
 
 def ingest(source_path: str, auto_convert: bool = True):
-    # 将文件转换成md文档
-    # 将当前文档和wiki上下文合并，让大模型分析当前文档的内容，输出要更新的wiki页面内容
-    # 大模型的输出包含以下字段：
-    # 1. overview_update：  更新后的overview.md文件内容
-    # 2. entity_pages：     更新后的实体页面内容
-    # 3. concept_pages：    更新后的概念页面内容
-    # 4. index_entry：      更新后的index.md文件内容
-    # 5. log_entry：        日志条目
-    # 6. contradictions：   如果有矛盾，打印出来
     source = Path(source_path)
-    if not source.exists():
+    if not file_exists(source):
         print(f"Error: file not found: {source_path}")
         sys.exit(1)
 
-    # Auto-convert non-markdown files
     converted_path = None
     if source.suffix.lower() != ".md":
+        if is_db_mode():
+            print(f"  ❌  DB mode only supports .md files (raw files should be pre-converted).")
+            print(f"       Use: python tools/file_to_md.py --project <name> --input_dir <dir>")
+            return
         if not auto_convert:
             print(f"  Skipping non-.md file (--no-convert): {source.name}")
             return
@@ -206,24 +191,24 @@ def ingest(source_path: str, auto_convert: bool = True):
             print(f"       Supported: {', '.join(sorted(ALL_SUPPORTED_EXTENSIONS))}")
             return
         print(f"  Converting {source.name} to markdown...")
-        # 将文件转换成md格式
         converted_path = convert_to_md(source)
-        # source是指向新的转换后的md文件
         source = converted_path
+        source_content = source.read_text(encoding="utf-8")
+    else:
+        source_content = read_file(source)
 
-    source_content = source.read_text(encoding="utf-8")
     source_hash = sha256(source_content)
     today = date.today().isoformat()
 
-    # 打印日志，摄取文件
     print(f"\nIngesting: {source.name}  (hash: {source_hash})")
 
-    # 构建wiki上下文，也就是wiki的index、overview和最近使用到的实体和概念页面(代码中硬编码了前5个最新的wiki摘要)
     wiki_context = build_wiki_context()
-    
-    # schema就是AGENTS.md文件，把这份文件给处理wiki的大模型读一下
-    # todo 这里可以优化一下，不需要AGENTS.md中的全部内容
+
     schema = read_file(SCHEMA_FILE)
+
+    source_label = _to_db_path(source) if is_db_mode() else (
+        str(source.relative_to(REPO_ROOT)) if source.is_relative_to(REPO_ROOT) else source.name
+    )
 
     prompt = f"""You are maintaining an LLM Wiki. Process this source document and integrate its knowledge into the wiki.
 
@@ -233,7 +218,7 @@ Schema and conventions:
 Current wiki state (index + recent pages):
 {wiki_context if wiki_context else "(wiki is empty — this is the first source)"}
 
-New source to ingest (file: {source.relative_to(REPO_ROOT) if source.is_relative_to(REPO_ROOT) else source.name}):
+New source to ingest (file: {source_label}):
 === SOURCE START ===
 {source_content}
 === SOURCE END ===
@@ -339,8 +324,30 @@ Return ONLY a valid JSON object with these fields (no markdown fences, no prose 
 
 
 if __name__ == "__main__":
+    # Parse --project for DB mode
+    project_name = None
+    remaining_args = []
+    i = 1
+    while i < len(sys.argv):
+        if sys.argv[i] == "--project" and i + 1 < len(sys.argv):
+            project_name = sys.argv[i + 1]
+            i += 2
+        else:
+            remaining_args.append(sys.argv[i])
+            i += 1
+
+    if project_name:
+        from storage.db import WikiStorage
+        db = WikiStorage("storage/wiki.db")
+        proj = db.get_project_by_name(project_name)
+        if not proj:
+            print(f"Error: project '{project_name}' not found. Create it first with storage API.")
+            sys.exit(1)
+        use_storage(db, proj["id"])
+        print(f"[DB mode] Using project: {project_name} (id={proj['id']})")
+
     # Handle --validate-only flag
-    if len(sys.argv) == 2 and sys.argv[1] == "--validate-only":
+    if len(remaining_args) == 1 and remaining_args[0] == "--validate-only":
         print("Running wiki validation (no ingest)...\n")
         result = validate_ingest()
         if result["broken_links"]:
@@ -355,11 +362,10 @@ if __name__ == "__main__":
         pages = page_stem_set()
         index_content = read_file(INDEX_FILE).lower()
         unindexed_all = []
-        for p in WIKI_DIR.rglob("*.md"):
-            if p.name in ("index.md", "log.md", "lint-report.md", "overview.md"):
-                continue
-            if p.stem.lower() not in index_content:
-                unindexed_all.append(str(p.relative_to(WIKI_DIR)))
+        for p in all_wiki_pages():
+            stem = p.stem.lower()
+            if stem not in index_content:
+                unindexed_all.append(page_id(p))
         if unindexed_all:
             print(f"Pages not in index.md: {len(unindexed_all)}")
             for up in unindexed_all[:20]:
@@ -371,12 +377,12 @@ if __name__ == "__main__":
         sys.exit(0)
 
     # Parse flags
-    no_convert = "--no-convert" in sys.argv
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    no_convert = "--no-convert" in remaining_args
+    args = [a for a in remaining_args if not a.startswith("--")]
 
     if not args:
-        print("Usage: python tools/ingest.py <path-to-source> [path2 ...] [dir1 ...]")
-        print("       python tools/ingest.py --validate-only")
+        print("Usage: python tools/ingest.py [--project <name>] <path-to-source> [path2 ...] [dir1 ...]")
+        print("       python tools/ingest.py [--project <name>] --validate-only")
         print("       python tools/ingest.py --no-convert  # skip auto-conversion of non-.md files")
         print(f"\nSupported formats: {', '.join(sorted(ALL_SUPPORTED_EXTENSIONS))}")
         sys.exit(1)
@@ -384,7 +390,14 @@ if __name__ == "__main__":
     paths_to_process = []
     for arg in args:
         p = Path(arg)
-        if p.is_file():
+        if is_db_mode():
+            # In DB mode, paths are relative to project and must be looked up in DB
+            p = REPO_ROOT / arg
+            if file_exists(p):
+                paths_to_process.append(p)
+            else:
+                print(f"  ⚠️  File not found in project: {arg}")
+        elif p.is_file():
             ext = p.suffix.lower()
             if ext in ALL_SUPPORTED_EXTENSIONS:
                 paths_to_process.append(p)
@@ -405,9 +418,10 @@ if __name__ == "__main__":
     unique_paths = []
     seen = set()
     for p in paths_to_process:
-        abs_p = p.resolve()
-        if abs_p not in seen:
-            seen.add(abs_p)
+        abs_p = p.resolve() if not is_db_mode() else p
+        key = str(abs_p)
+        if key not in seen:
+            seen.add(key)
             unique_paths.append(p)
 
     if not unique_paths:

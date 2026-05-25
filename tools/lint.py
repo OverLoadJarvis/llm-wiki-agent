@@ -29,7 +29,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from tools._utils import (
     REPO_ROOT, WIKI_DIR, GRAPH_DIR, GRAPH_JSON, LOG_FILE,
-    read_file, call_llm, all_wiki_pages, extract_wikilinks, append_log,
+    read_file, write_file, call_llm, all_wiki_pages, extract_wikilinks, append_log, page_id,
+    file_exists, is_db_mode, use_storage,
 )
 
 
@@ -92,7 +93,7 @@ def check_link_density(pages: list[Path], min_outbound: int = 2) -> list[dict]:
         unique_links = set(link.lower() for link in links)
         if len(unique_links) < min_outbound:
             results.append({
-                "path": str(p.relative_to(REPO_ROOT)),
+                "path": page_id(p) + ".md",
                 "outbound_links": len(unique_links),
                 "links": sorted(unique_links),
             })
@@ -103,11 +104,10 @@ def check_link_density(pages: list[Path], min_outbound: int = 2) -> list[dict]:
 # ── Graph-aware checks ──────────────────────────────────────────────
 
 def load_graph_data() -> dict | None:
-    """Load graph.json if it exists. Returns None if missing (graceful degradation)."""
-    if not GRAPH_JSON.exists():
+    if not file_exists(GRAPH_JSON):
         return None
     try:
-        return json.loads(GRAPH_JSON.read_text(encoding="utf-8"))
+        return json.loads(read_file(GRAPH_JSON))
     except (json.JSONDecodeError, IOError, UnicodeDecodeError):
         print("  [warn] graph.json is corrupted — skipping graph-aware checks")
         return None
@@ -143,10 +143,9 @@ def check_hub_stubs(graph_data: dict, pages: list[Path], min_content_chars: int 
     std_deg = statistics.stdev(deg_values)
     threshold = mean_deg + 2 * std_deg
 
-    # Map node_id -> page path
     node_to_path: dict[str, Path] = {}
     for p in pages:
-        nid = p.relative_to(WIKI_DIR).as_posix().replace(".md", "")
+        nid = page_id(p)
         node_to_path[nid] = p
 
     results = []
@@ -162,7 +161,7 @@ def check_hub_stubs(graph_data: dict, pages: list[Path], min_content_chars: int 
                 "node_id": node_id,
                 "degree": deg,
                 "content_len": content_len,
-                "path": str(path.relative_to(REPO_ROOT)),
+                "path": page_id(path) + ".md",
             })
     return sorted(results, key=lambda x: x["degree"], reverse=True)
 
@@ -272,8 +271,8 @@ def run_lint():
     sample = pages[:20]
     pages_context = ""
     for p in sample:
-        rel = p.relative_to(REPO_ROOT)
-        pages_context += f"\n\n### {rel}\n{read_file(p)[:1500]}"  # truncate long pages
+        rel = page_id(p) + ".md"
+        pages_context += f"\n\n### {rel}\n{read_file(p)[:1500]}"
 
     print("  running semantic lint via API...")
     prompt = f"""You are linting an LLM Wiki. Review the pages below and identify:
@@ -308,13 +307,13 @@ Be specific — name the exact pages and claims involved.
     if orphans:
         report_lines.append("### Orphan Pages (no inbound links)")
         for p in orphans:
-            report_lines.append(f"- `{p.relative_to(REPO_ROOT)}`")
+            report_lines.append(f"- `{page_id(p)}.md`")
         report_lines.append("")
 
     if broken:
         report_lines.append("### Broken Wikilinks")
         for page, link in broken:
-            report_lines.append(f"- `{page.relative_to(REPO_ROOT)}` links to `[[{link}]]` — not found")
+            report_lines.append(f"- `{page_id(page)}.md` links to `[[{link}]]` — not found")
         report_lines.append("")
 
     if missing_entities:
@@ -403,15 +402,26 @@ Be specific — name the exact pages and claims involved.
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Lint the LLM Wiki")
+    parser.add_argument("--project", type=str, default=None, help="Project name (DB mode)")
     parser.add_argument("--save", action="store_true", help="Save lint report to wiki/lint-report.md")
     args = parser.parse_args()
+
+    if args.project:
+        from storage.db import WikiStorage
+        db = WikiStorage("storage/wiki.db")
+        proj = db.get_project_by_name(args.project)
+        if not proj:
+            print(f"Error: project '{args.project}' not found.")
+            sys.exit(1)
+        use_storage(db, proj["id"])
+        print(f"[DB mode] Using project: {args.project} (id={proj['id']})")
 
     report = run_lint()
 
     if args.save and report:
         report_path = WIKI_DIR / "lint-report.md"
-        report_path.write_text(report, encoding="utf-8")
-        print(f"\nSaved: {report_path.relative_to(REPO_ROOT)}")
+        write_file(report_path, report)
+        print(f"\nSaved: wiki/lint-report.md")
 
     today = date.today().isoformat()
     append_log(f"## [{today}] lint | Wiki health check\n\nRan lint. See lint-report.md for details.")
