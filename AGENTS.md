@@ -42,19 +42,7 @@ tools/        # Standalone Python scripts
 
 ## Page Format
 
-Every wiki page uses this frontmatter:
-
-```yaml
----
-title: "Page Title"
-type: source | entity | concept | synthesis
-tags: []
-sources: []       # list of source slugs that inform this page
-last_updated: YYYY-MM-DD
----
-```
-
-Use `[[PageName]]` wikilinks to link to other wiki pages.
+详见 [FORMATS.md](FORMATS.md#1-通用-page-format页面格式)。
 
 ---
 
@@ -78,74 +66,11 @@ Steps (in order):
 
 ### Source Page Format
 
-```markdown
----
-title: "Source Title"
-type: source
-tags: []
-date: YYYY-MM-DD
-source_file: raw/...
----
-
-## Summary
-2–4 sentence summary.
-
-## Key Claims
-- Claim 1
-- Claim 2
-
-## Key Quotes
-> "Quote here" — context
-
-## Connections
-- [[EntityName]] — how they relate
-- [[ConceptName]] — how it connects
-
-## Contradictions
-- Contradicts [[OtherPage]] on: ...
-```
+详见 [FORMATS.md](FORMATS.md#3-source-page-format来源页格式)。
 
 ### Domain-Specific Templates
 
-If the source falls into a specific domain (e.g., personal diary, meeting notes), the agent should use a specialized template instead of the default generic one above:
-
-#### Diary / Journal Template
-```markdown
----
-title: "YYYY-MM-DD Diary"
-type: source
-tags: [diary]
-date: YYYY-MM-DD
----
-## Event Summary
-...
-## Key Decisions
-...
-## Energy & Mood
-...
-## Connections
-...
-## Shifts & Contradictions
-...
-```
-
-#### Meeting Notes Template
-```markdown
----
-title: "Meeting Title"
-type: source
-tags: [meeting]
-date: YYYY-MM-DD
----
-## Goal
-...
-## Key Discussions
-...
-## Decisions Made
-...
-## Action Items
-...
-```
+特定领域（日记、会议等）模板详见 [FORMATS.md](FORMATS.md#4-domain-specific-templates特定领域模板)。
 
 ---
 
@@ -229,36 +154,15 @@ If Python/deps unavailable, build manually:
 
 ## Naming Conventions
 
-- Source slugs: `kebab-case` matching source filename
-- Entity pages: `TitleCase.md` (e.g. `OpenAI.md`, `SamAltman.md`)
-- Concept pages: `TitleCase.md` (e.g. `ReinforcementLearning.md`, `RAG.md`)
+详见 [FORMATS.md](FORMATS.md#2-naming-conventions命名规范)。
 
 ## Index Format
 
-```markdown
-# Wiki Index
-
-## Overview
-- [Overview](overview.md) — living synthesis
-
-## Sources
-- [Source Title](sources/slug.md) — one-line summary
-
-## Entities
-- [Entity Name](entities/EntityName.md) — one-line description
-
-## Concepts
-- [Concept Name](concepts/ConceptName.md) — one-line description
-
-## Syntheses
-- [Analysis Title](syntheses/slug.md) — what question it answers
-```
+详见 [FORMATS.md](FORMATS.md#5-index-format索引格式)。
 
 ## Log Format
 
-`## [YYYY-MM-DD] <operation> | <title>`
-
-Operations: `ingest`, `query`, `health`, `lint`, `graph`, `report`
+详见 [FORMATS.md](FORMATS.md#6-log-format日志格式)。
 
 ---
 

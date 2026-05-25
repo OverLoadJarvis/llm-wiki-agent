@@ -30,32 +30,15 @@ import argparse
 from pathlib import Path
 from datetime import date
 
-REPO_ROOT = Path(__file__).parent.parent
-WIKI_DIR = REPO_ROOT / "wiki"
-INDEX_FILE = WIKI_DIR / "index.md"
-LOG_FILE = WIKI_DIR / "log.md"
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from tools._utils import (
+    REPO_ROOT, WIKI_DIR, INDEX_FILE, LOG_FILE,
+    read_file, all_wiki_pages, strip_frontmatter,
+)
 
 # Minimum content length (excluding frontmatter) to not be considered a stub
 STUB_THRESHOLD_CHARS = 100
-
-
-def read_file(path: Path) -> str:
-    return path.read_text(encoding="utf-8") if path.exists() else ""
-
-
-def all_wiki_pages() -> list[Path]:
-    """All .md files in wiki/, excluding meta files."""
-    exclude = {"index.md", "log.md", "lint-report.md", "health-report.md"}
-    return [p for p in WIKI_DIR.rglob("*.md") if p.name not in exclude]
-
-
-def strip_frontmatter(content: str) -> str:
-    """Remove YAML frontmatter (--- ... ---) from content."""
-    if content.startswith("---"):
-        end = content.find("---", 3)
-        if end != -1:
-            return content[end + 3:].strip()
-    return content.strip()
 
 
 # ── Check: Empty / Stub files ───────────────────────────────────────

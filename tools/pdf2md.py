@@ -31,7 +31,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from tools._utils import REPO_ROOT
+
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "raw" / "papers"
 
 ARXIV_PATTERNS = [

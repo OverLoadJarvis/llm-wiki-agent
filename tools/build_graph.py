@@ -21,20 +21,21 @@ Edge types:
 
 import re
 import json
-import hashlib
 import argparse
 import statistics
 import webbrowser
+import sys
 from pathlib import Path
 from datetime import date
 
-import os
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-try:
-    from dotenv import load_dotenv
-    load_dotenv(override=True)
-except ImportError:
-    pass
+from tools._utils import (
+    REPO_ROOT, WIKI_DIR, GRAPH_DIR, GRAPH_JSON,
+    read_file, call_llm, sha256, all_wiki_pages,
+    extract_wikilinks_unique as extract_wikilinks,
+    extract_frontmatter_type, page_id,
+)
 
 try:
     import networkx as nx
@@ -44,15 +45,9 @@ except ImportError:
     HAS_NETWORKX = False
     print("Warning: networkx not installed. Community detection disabled. Run: pip install networkx")
 
-REPO_ROOT = Path(__file__).parent.parent
-WIKI_DIR = REPO_ROOT / "wiki"
-GRAPH_DIR = REPO_ROOT / "graph"
-GRAPH_JSON = GRAPH_DIR / "graph.json"
 GRAPH_HTML = GRAPH_DIR / "graph.html"
 CACHE_FILE = GRAPH_DIR / ".cache.json"
 INFERRED_EDGES_FILE = GRAPH_DIR / ".inferred_edges.jsonl"
-LOG_FILE = WIKI_DIR / "log.md"
-SCHEMA_FILE = REPO_ROOT / "AGENTS.md"
 
 # Node type → color mapping
 TYPE_COLORS = {
@@ -68,62 +63,6 @@ EDGE_COLORS = {
     "INFERRED": "#FF5722",
     "AMBIGUOUS": "#BDBDBD",
 }
-
-
-def read_file(path: Path) -> str:
-    return path.read_text(encoding="utf-8") if path.exists() else ""
-
-
-def call_llm(prompt: str, model_env: str, default_model: str, max_tokens: int = 4096) -> str:
-    try:
-        from litellm import completion
-    except ImportError:
-        print("Error: litellm not installed. Run: pip install litellm")
-        import sys
-        sys.exit(1)
-
-    model = os.getenv(model_env, default_model)
-
-    kwargs = {
-        "model": model,
-        "messages": [{"role": "system", "content": prompt}]
-    }
-
-    if max_tokens:
-        kwargs["max_tokens"] = max_tokens
-    
-    api_base = os.getenv("OPENAI_API_BASE")
-    api_key = os.getenv("OPENAI_API_KEY")
-    
-    if api_base:
-        kwargs["api_base"] = api_base
-    if api_key:
-        kwargs["api_key"] = api_key
-
-    response = completion(**kwargs)
-    return response.choices[0].message.content
-
-
-def sha256(text: str) -> str:
-    return hashlib.sha256(text.encode()).hexdigest()
-
-
-def all_wiki_pages() -> list[Path]:
-    return [p for p in WIKI_DIR.rglob("*.md")
-            if p.name not in ("index.md", "log.md", "lint-report.md")]
-
-
-def extract_wikilinks(content: str) -> list[str]:
-    return list(set(re.findall(r'\[\[([^\]]+)\]\]', content)))
-
-
-def extract_frontmatter_type(content: str) -> str:
-    match = re.search(r'^type:\s*(\S+)', content, re.MULTILINE)
-    return match.group(1).strip('"\'') if match else "unknown"
-
-
-def page_id(path: Path) -> str:
-    return path.relative_to(WIKI_DIR).as_posix().replace(".md", "")
 
 
 def edge_id(src: str, target: str, edge_type: str) -> str:

@@ -10,39 +10,13 @@ Usage:
     python tools/heal.py
 """
 
-import os
 import sys
 from pathlib import Path
 
-try:
-    from litellm import completion
-except ImportError:
-    print("Error: litellm not installed. Run: pip install litellm")
-    sys.exit(1)
-
-# Ensure tools can be imported
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+from tools._utils import REPO_ROOT, WIKI_DIR, ENTITIES_DIR, call_llm
 from tools.lint import find_missing_entities, all_wiki_pages
-
-REPO_ROOT = Path(__file__).parent.parent
-WIKI_DIR = REPO_ROOT / "wiki"
-ENTITIES_DIR = WIKI_DIR / "entities"
-
-def call_llm(prompt: str, max_tokens: int = 8192) -> str:
-    # Use litellm standard environment variables
-    # e.g., GEMINI_API_KEY, ANTHROPIC_API_KEY, OPENAI_API_KEY
-    model = os.getenv("LLM_MODEL", "claude-3-5-haiku-latest") # default to fast model
-    api_base = os.getenv("OPENAI_API_BASE")
-    api_key = os.getenv("OPENAI_API_KEY")
-    response = completion(
-        model=model,
-        messages=[{"role": "system", "content": prompt}],
-        max_tokens=max_tokens,
-        api_base=api_base,
-        api_key=api_key
-    )
-    return response.choices[0].message.content
 
 def search_sources(entity: str, pages: list[Path]) -> list[Path]:
     """Find up to 15 pages where this entity is mentioned natively."""
@@ -92,7 +66,7 @@ sources: {[s.name for s in sources]}
 Write a comprehensive paragraph defining what `{entity}` means in the context of this wiki, its main significance, and any actions or associations related to it.
 """
         try:
-            result = call_llm(prompt)
+            result = call_llm(prompt, "LLM_MODEL", "claude-3-5-haiku-latest")
             out_path = ENTITIES_DIR / f"{entity}.md"
             out_path.write_text(result, encoding="utf-8")
             print(f" -> Saved to {out_path.relative_to(REPO_ROOT)}")

@@ -24,30 +24,20 @@ The LLM reads the source, extracts knowledge, and updates the wiki:
   - Runs post-ingest validation (broken links, index coverage)
 """
 
-import os
 import sys
 import json
-import hashlib
 import re
-import shutil
 import tempfile
 from pathlib import Path
-from collections import defaultdict
 from datetime import date
 
-try:
-    from dotenv import load_dotenv
-    load_dotenv(override=True)
-except ImportError:
-    pass
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-# 仓库根目录
-REPO_ROOT = Path(__file__).parent.parent
-
-WIKI_DIR = REPO_ROOT / "wiki"
-LOG_FILE = WIKI_DIR / "log.md"
-INDEX_FILE = WIKI_DIR / "index.md"
-OVERVIEW_FILE = WIKI_DIR / "overview.md"
+from tools._utils import (
+    REPO_ROOT, WIKI_DIR, LOG_FILE, INDEX_FILE, OVERVIEW_FILE, SCHEMA_FILE,
+    read_file, write_file, call_llm, sha256,
+    extract_wikilinks, append_log, page_stem_set,
+)
 
 # File extensions that can be auto-converted to markdown via markitdown.
 # .md files are ingested directly without conversion.
@@ -59,62 +49,6 @@ CONVERTIBLE_EXTENSIONS = {
     ".wav", ".mp3",  # audio transcription via markitdown
 }
 ALL_SUPPORTED_EXTENSIONS = {".md"} | CONVERTIBLE_EXTENSIONS   # | 集合运算符，并集
-SCHEMA_FILE = REPO_ROOT / "AGENTS.md"
-
-
-def sha256(text: str) -> str:
-    """
-    计算字符串的SHA-256哈希值，返回前16位
-    """
-    return hashlib.sha256(text.encode()).hexdigest()[:16]
-
-
-def read_file(path: Path) -> str:
-    """
-    读取文件内容，返回字符串
-    """
-    return path.read_text(encoding="utf-8") if path.exists() else ""
-
-
-def call_llm(prompt: str, max_tokens: int = 8192) -> str:
-    """
-    调用LLM模型，返回模型回复
-    """
-    try:
-        from litellm import completion
-    except ImportError:
-        print("Error: litellm not installed. Run: pip install litellm")
-        sys.exit(1)
-        
-    model = os.getenv("LLM_MODEL", "claude-3-5-sonnet-latest")
-    
-    kwargs = {
-        "model": model,
-        "messages": [{"role": "system", "content": prompt}]
-    }
-    
-    if max_tokens:
-        kwargs["max_tokens"] = max_tokens
-    
-    api_base = os.getenv("OPENAI_API_BASE")
-    api_key = os.getenv("OPENAI_API_KEY")
-    
-    if api_base:
-        kwargs["api_base"] = api_base
-    if api_key:
-        kwargs["api_key"] = api_key
-
-    response = completion(**kwargs)
-    return response.choices[0].message.content
-
-
-def write_file(path: Path, content: str):
-    """
-    写入文件内容
-    """
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
-    print(f"  wrote: {path.relative_to(REPO_ROOT)}")
 
 
 def build_wiki_context() -> str:
@@ -166,28 +100,6 @@ def update_index(new_entry: str, section: str = "Sources"):
     write_file(INDEX_FILE, content)
 
 
-def append_log(entry: str):
-    """
-    追加日志条目到日志文件
-    """
-    existing = read_file(LOG_FILE)
-    write_file(LOG_FILE, entry.strip() + "\n\n" + existing)
-
-
-def extract_wikilinks(content: str) -> list[str]:
-    """Extract all [[WikiLink]] targets from page content."""
-    return re.findall(r'\[\[([^\]]+)\]\]', content)
-
-
-def all_wiki_pages() -> set[str]:
-    """Return set of all wiki page stems (case-insensitive)."""
-    pages = set()
-    for p in WIKI_DIR.rglob("*.md"):
-        if p.name not in ("index.md", "log.md", "lint-report.md"):
-            pages.add(p.stem.lower())
-    return pages
-
-
 def validate_ingest(changed_pages: list[str] | None = None) -> dict:
     """Validate wiki integrity after an ingest.
 
@@ -196,8 +108,9 @@ def validate_ingest(changed_pages: list[str] | None = None) -> dict:
       2. Pages not registered in index.md
 
     Returns dict with 'broken_links' and 'unindexed' lists.
+    检查指定页面或所有页面中的WikiLink是否损坏，以及是否未在索引中注册。
     """
-    existing_pages = all_wiki_pages()
+    existing_pages = page_stem_set()
     index_content = read_file(INDEX_FILE).lower()
 
     # Determine which pages to scan for broken links
@@ -236,6 +149,8 @@ def convert_to_md(source: Path) -> Path:
 
     Returns the path to the converted .md file (placed next to the original
     with a .md extension, or in a temp location if the source dir is read-only).
+    将非Markdown文件转换为Markdown文件，返回转换后的文件路径。
+    如果源目录只读，将转换后的文件放在临时目录中。
     """
     try:
         from markitdown import MarkItDown
@@ -437,7 +352,7 @@ if __name__ == "__main__":
         else:
             print("No broken wikilinks found.")
         print()
-        pages = all_wiki_pages()
+        pages = page_stem_set()
         index_content = read_file(INDEX_FILE).lower()
         unindexed_all = []
         for p in WIKI_DIR.rglob("*.md"):
