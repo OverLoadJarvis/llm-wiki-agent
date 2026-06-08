@@ -58,6 +58,14 @@ def sha256(text: str) -> str:
     return hashlib.sha256(text.encode()).hexdigest()[:16]
 
 
+def clip(text: str, limit: int = 260) -> str:
+    """Truncate text at word boundary instead of mid-word."""
+    if len(text) <= limit:
+        return text
+    clipped = text[: limit - 3].rsplit(" ", 1)[0].rstrip()
+    return clipped + "..."
+
+
 def read_file(path: Path) -> str:
     return path.read_text(encoding="utf-8") if path.exists() else ""
 

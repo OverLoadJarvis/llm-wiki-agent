@@ -144,6 +144,25 @@ def _parse_log_entries(log_content: str) -> set[str]:
     )
 
 
+def _parse_frontmatter_title(content: str) -> str:
+    """Extract and lightly unescape a frontmatter title scalar.
+
+    Handles YAML-escaped quotes (e.g. title: "few \"people\" laptop")
+    so that log coverage matching doesn't false-positive on escaped strings.
+    """
+    match = re.search(r'^title:\s*(.+?)\s*$', content, re.MULTILINE)
+    if not match:
+        return ""
+    raw = match.group(1).strip()
+    # Strip surrounding quotes and unescape inner ones
+    if len(raw) >= 2 and raw[0] == raw[-1] == '"':
+        raw = raw[1:-1]
+        raw = raw.replace(r'\"', '"').replace(r"\'", "'").replace(r"\\", "\\")
+    elif len(raw) >= 2 and raw[0] == raw[-1] == "'":
+        raw = raw[1:-1].replace("''", "'")
+    return raw.strip().lower()
+
+
 def check_log_coverage(pages: list[Path]) -> list[dict]:
     """Find source pages that have no corresponding ingest entry in log.md.
 
@@ -162,10 +181,8 @@ def check_log_coverage(pages: list[Path]) -> list[dict]:
         # Try matching by slug (filename without .md) or by frontmatter title
         slug = p.stem.lower().replace("-", " ").replace("_", " ")
 
-        # Also try extracting title from frontmatter
         content = read_file(p)
-        title_match = re.search(r'^title:\s*["\']?(.+?)["\']?\s*$', content, re.MULTILINE)
-        fm_title = title_match.group(1).strip().lower() if title_match else ""
+        fm_title = _parse_frontmatter_title(content)
 
         if slug not in logged_titles and fm_title not in logged_titles:
             missing.append({
